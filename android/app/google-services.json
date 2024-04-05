@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "965247848409",
+    "project_id": "unitransit-1",
+    "storage_bucket": "unitransit-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965247848409:android:bf295766233af81c9953c8",
+        "android_client_info": {
+          "package_name": "com.example.unitransit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBPrTS84UDXuSQoN2eWGkf74dxAJx7giQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965247848409:android:ffe51e0869a4933c9953c8",
+        "android_client_info": {
+          "package_name": "com.example.unitransit_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBPrTS84UDXuSQoN2eWGkf74dxAJx7giQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965247848409:android:e41281ddb77174659953c8",
+        "android_client_info": {
+          "package_name": "com.example.unitransit_app_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBPrTS84UDXuSQoN2eWGkf74dxAJx7giQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
