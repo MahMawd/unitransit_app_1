@@ -1,58 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/components/bus_v2.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class HomePage extends StatelessWidget{
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override 
   Widget build(BuildContext context){
     return  Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.black,
       bottomNavigationBar: BottomNavigationBar(items:const [
         BottomNavigationBarItem(icon: Icon(Icons.home),label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.account_circle),label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.notifications),label: ''),
       ] ),
       body: SafeArea(
-        child: Column(
-          children: [
-            //begin search bar
-             Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(12),
-              child: const Row(
-                children: [              
-                  Icon(
-                  Icons.search,
-                  color: Colors.black,
-                ),
-                 Text(
-                  'search',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-               ],
-              ),
-                       ),
-              //end search bar
-              const SizedBox(height: 7.0,),
-          //begin busV2 widget
-          BusV2(),
-          SizedBox(height: 7.0,),
-          BusV2(),
-          /*
-           Container(
-            height: 210,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0),color: Colors.black,),
-             child: Padding(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+          
+             Padding(
                padding: const EdgeInsets.symmetric(horizontal: 25.0),
                child: Column(
                 children: [
@@ -64,17 +31,21 @@ class HomePage extends StatelessWidget{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                                        Text(
-                  'Bus name',
+                  'Search Bus',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
-                               ),
-                               SizedBox(
+                ),
+                SizedBox(
                   height: 8,
-                               ),
-                              ],
+                ),
+                Text(
+                  'choose your placement !',
+                  style: TextStyle(color: Colors.white),
+                )
+               ],
                        ),
                        
                 //notfication
@@ -119,7 +90,13 @@ class HomePage extends StatelessWidget{
                  ],
                 ),
                          ),
-                         const SizedBox(height: 20,), 
+                       
+                       
+                         const SizedBox(
+                height: 20,
+                         ),
+                       
+                       
                Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -143,95 +120,123 @@ class HomePage extends StatelessWidget{
                  ],
                 ),
                          ),
-                         const SizedBox(height: 25,),
+                       
+                         const SizedBox(
+                height: 25,
+                         ),
+                       
+                       
+                       
+               Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(12), //el 3ordh mta3 box 
+                // fi west box search
+                child: const Row(
+                  children: [              
+                    Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
+                    
+                   Text(
+                    'search',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                 ],
+                ),
+                         ),
                 ],
                ),
              ),
-           ),
-           */
-           //end busV2 widget
-           /*const SizedBox(
-            height: 25,
-           ),
-          Expanded(
-            child:  Container(
-              padding: const EdgeInsets.all(25),
-            color: Colors.grey[100],
-            child:  Center(
-              child: Column(
-                children: [
-                 const  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Times',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+             const SizedBox(
+              height: 25,
+             ),
+              Container(
+                padding: const EdgeInsets.all(25),
+              color: Colors.grey[100],
+              child:  Center(
+                child: Column(
+                  children: [
+                   const  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Times',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
+                        Icon(Icons.more_horiz),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    //list of time
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      Icon(Icons.more_horiz),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  //list of time
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      child: const ListTile(leading: Icon(Icons.timer),
+                      title: Text('Departure'),
+                      subtitle: Text('14:30'),
+                      ),
                     ),
-                    child: const ListTile(leading: Icon(Icons.timer),
-                    title: Text('Departure'),
-                    subtitle: Text('14:30'),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                   Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                     Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const ListTile(leading: Icon(Icons.timer),
+                      title: Text('Departure'),
+                      subtitle: Text('15:30'),
+                      ),
                     ),
-                    child: const ListTile(leading: Icon(Icons.timer),
-                    title: Text('Departure'),
-                    subtitle: Text('15:30'),
+                                      const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                                    const SizedBox(
-                    height: 20,
-                  ),
-                   Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                     Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const ListTile(leading: Icon(Icons.timer),
+                      title: Text('Departure'),
+                      subtitle: Text('16:30'),
+                      ),
                     ),
-                    child: const ListTile(leading: Icon(Icons.timer),
-                    title: Text('Departure'),
-                    subtitle: Text('16:30'),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+                      
+              
             ),
-                    
-            
+
+            ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in page
+                  } catch (e) {
+                    print('Failed to sign out: $e');
+                  }
+                },
+                child: const Text('Sign Out'),
+              ),
+            ],
           ),
-          ),*/
-          ElevatedButton(
-              onPressed: () async {
-                try {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in page
-                } catch (e) {
-                  print('Failed to sign out: $e');
-                }
-              },
-              child: Text('Sign Out'),
-            ),
-          ],
         ),
       )
     );

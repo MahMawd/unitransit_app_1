@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/boutton.dart';
 import 'package:unitransit_app_1/components/zone_texte.dart';
-import 'package:unitransit_app_1/pages/page_accueil.dart';
 import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
 import 'package:unitransit_app_1/pages/sign_up.dart';
 

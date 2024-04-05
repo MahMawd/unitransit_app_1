@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BusV2 extends StatelessWidget {
-  BusV2({super.key});
+  const BusV2({super.key});
   @override
   Widget build(BuildContext context){
     return Container(
