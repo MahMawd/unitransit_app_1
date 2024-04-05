@@ -1,13 +1,41 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/boutton.dart';
 import 'package:unitransit_app_1/components/zone_texte.dart';
+import 'package:unitransit_app_1/pages/page_accueil.dart';
+import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
 import 'package:unitransit_app_1/pages/sign_up.dart';
 
 
-class Authentification extends StatelessWidget{
+class Authentification extends StatefulWidget{
    Authentification({super.key});
-  final emailController=TextEditingController();
-  final passwordController=TextEditingController();
+
+  @override
+  State<Authentification> createState() => _AuthentificationState();
+}
+
+class _AuthentificationState extends State<Authentification> {
+  final FirebaseAuth auth=FirebaseAuth.instance;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> _signIn() async {
+    try {
+      final UserCredential userCredential =
+          await auth.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+        );
+    print('Signed in user: ${userCredential.user!.uid}');
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()), // Replace 'NextPage' with the page you want to navigate to
+      );
+    } catch (e) {
+      // Show error message
+      print('Failed to sign in: $e');
+    }
+  }
   @override
   Widget build(BuildContext context){
     return  Scaffold(
@@ -55,7 +83,7 @@ class Authentification extends StatelessWidget{
                 ),
               const SizedBox(height: 30.0),
               Boutton(
-                onTap:()=>{},
+                onTap:()=>_signIn(),
                 text: "Se connecter",
               ),
               const SizedBox(height: 30.0),
@@ -75,4 +103,5 @@ class Authentification extends StatelessWidget{
         ),
       );
   }
+
 }

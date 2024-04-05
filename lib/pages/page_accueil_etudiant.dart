@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/bus_v2.dart';
+import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class HomePage extends StatelessWidget{
   const HomePage({super.key});
@@ -218,6 +220,17 @@ class HomePage extends StatelessWidget{
             
           ),
           ),*/
+          ElevatedButton(
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in page
+                } catch (e) {
+                  print('Failed to sign out: $e');
+                }
+              },
+              child: Text('Sign Out'),
+            ),
           ],
         ),
       )
