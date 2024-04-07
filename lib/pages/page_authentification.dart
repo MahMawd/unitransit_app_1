@@ -2,10 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/boutton.dart';
 import 'package:unitransit_app_1/components/zone_texte.dart';
+import 'package:unitransit_app_1/global/common/toast.dart';
 import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
 import 'package:unitransit_app_1/pages/sign_up.dart';
-
-
 class Authentification extends StatefulWidget{
    Authentification({super.key});
 
@@ -20,6 +19,12 @@ class _AuthentificationState extends State<Authentification> {
 
   Future<void> _signIn() async {
     try {
+      if(emailController.text==''){
+        throw EmptyEmailException();
+      }
+      if(passwordController.text==''){
+        throw EmptyPasswordException();
+      }
       final UserCredential userCredential =
           await auth.signInWithEmailAndPassword(
         email: emailController.text,
@@ -28,13 +33,26 @@ class _AuthentificationState extends State<Authentification> {
     print('Signed in user: ${userCredential.user!.uid}');
     Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()), // Replace 'NextPage' with the page you want to navigate to
+        MaterialPageRoute(builder: (context) => const HomePage()), // Replace 'NextPage' with the page you want to navigate to
       );
-    } catch (e) {
-      // Show error message
-      print('Failed to sign in: $e');
-    }
-  }
+    }on FirebaseAuthException catch(e){
+      if(e.code =='invalid-credential'){
+        showToast(message:'Email ou mot de passe invalide');
+      }else if(e.code=='channel-error'){
+        showToast(message: 'Remplir les champs email et mot de passe');
+      }
+      else{
+        showToast(message:'Erreur: ${e.code}');
+        print('ERROR:$e');
+      }
+      }on EmptyEmailException catch(e){
+        showToast(message:'Erreur:${e.code}');
+        }on EmptyPasswordException catch(e){
+          showToast(message:'Erreur:${e.code}');
+          }catch (e) {
+            print('Failed to sign in: $e');
+            }
+            }
   @override
   Widget build(BuildContext context){
     return  Scaffold(
@@ -91,7 +109,7 @@ class _AuthentificationState extends State<Authentification> {
                 onTap:(){
                    Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SignUp()), // Navigate to SignUp page
+              MaterialPageRoute(builder: (context) => const SignUp()), // Navigate to SignUp page
             );
                 },
               )

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class HomePage extends StatefulWidget{
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                      const SizedBox(width:10,),
                       const Text("From"),
                       const SizedBox(width:10,),
-                        Container(
+                        SizedBox(
                           height: 60.0,
                           width: 250.0,
                           child: ButtonTheme(
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                      const SizedBox(width:10,),
                       const Text("To"),
                       const SizedBox(width:25,),
-                        Container(
+                        SizedBox(
                           height: 60.0,
                           width: 250.0,
                           child: ButtonTheme(
@@ -171,15 +171,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-
               ),
-                       
-                         const SizedBox(
-                height: 25,
-                         ),
-                       
-                       
-                       
+              const SizedBox(height: 25,),
+
                Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -274,19 +268,17 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Container(
-              child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in page
-                    } catch (e) {
-                      print('Failed to sign out: $e');
-                    }
-                  },
-                  child: const Text('Sign Out'),
-                ),
-            ),
+            ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in page
+                  } catch (e) {
+                    print('Failed to sign out: $e');
+                  }
+                },
+                child: const Text('Sign Out'),
+              ),
             ],
           ),
         ),

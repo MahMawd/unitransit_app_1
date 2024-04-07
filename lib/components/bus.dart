@@ -13,13 +13,13 @@ class Bus extends StatelessWidget{
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),color: Colors.grey.shade300,),
           child:Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left:10.0),
-                child: Container(
+              const Padding(
+                padding:EdgeInsets.only(left:10.0),
+                child: SizedBox(
                   width: 53,
                   height: 50,
                   //decoration: BoxDecoration(border: Border.all(color: Colors.white),borderRadius: BorderRadius.circular(5.0)),
-                  child: const Icon(size: 50,
+                  child: Icon(size: 50,
                     Icons.directions_bus,
                   ),
                 ),
@@ -30,7 +30,7 @@ class Bus extends StatelessWidget{
               TextButton(
                 style: TextButton.styleFrom(
                     backgroundColor: Colors.white,
-                    textStyle: TextStyle(color: Colors.red)
+                    textStyle: const TextStyle(color: Colors.red)
                 ),
                 onPressed: () {},
                 child:const Text("Start"),
