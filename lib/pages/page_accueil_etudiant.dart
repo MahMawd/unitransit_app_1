@@ -12,7 +12,8 @@ class HomePage extends StatefulWidget{
 class _HomePageState extends State<HomePage> {
   List<String> stations = ['Tunis Marine', 'Station 2', 'Station 3', 'Station 4']; // Add your station names here
 
-    String selectedStation = 'Tunis Marine'; // Initially select the first station
+    String selectedStationFrom = 'Tunis Marine';
+    String selectedStationTo = 'Tunis Marine'; // Initially select the first station
   @override 
   Widget build(BuildContext context){
     return  Scaffold(
@@ -101,11 +102,11 @@ class _HomePageState extends State<HomePage> {
                                 fillColor: Colors.white,
                                 filled: true,
                               ),
-                              value: selectedStation,
+                              value: selectedStationFrom,
                               onChanged: (String? newValue) {
                                 if (newValue != null) {
                                   setState(() {
-                                    selectedStation = newValue;
+                                    selectedStationFrom = newValue;
                                     });
                                   }
                                 },
@@ -152,11 +153,11 @@ class _HomePageState extends State<HomePage> {
                                 fillColor: Colors.white,
                                 filled: true,
                               ),
-                              value: selectedStation,
+                              value: selectedStationTo,
                               onChanged: (String? newValue) {
                                 if (newValue != null) {
                                   setState(() {
-                                    selectedStation = newValue;
+                                    selectedStationTo = newValue;
                                     });
                                   }
                                 },
@@ -251,8 +252,7 @@ class _HomePageState extends State<HomePage> {
                       subtitle: Text('15:30'),
                       ),
                     ),
-                                      const SizedBox(
-                      height: 20,
+                    const SizedBox(height: 20,
                     ),
                      Container(
                       decoration: BoxDecoration(
