@@ -64,7 +64,7 @@ class _SignUpState extends State<SignUp> {
     });
 
     // Sign up success, navigate to next page or do something else
-    print('Signed up user: $userId');
+    debugPrint('Signed up user: $userId');
     showToast(message: 'Compte créé');
   }on FirebaseAuthException catch(e){
     if(e.code=='email-already-in-use'){
@@ -99,7 +99,7 @@ class _SignUpState extends State<SignUp> {
   }
    catch (e) {
     // Show error message
-    print('Failed to sign up: $e');
+    debugPrint('Failed to sign up: $e');
   }
 }
   @override
@@ -177,7 +177,7 @@ class _SignUpState extends State<SignUp> {
                       onTap:(){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Authentification())); // Navigate to SignUp page
+                          MaterialPageRoute(builder: (context) => const Authentification())); // Navigate to SignUp page
                           },
                       child: const Text(
                         "Connectez-vous",
