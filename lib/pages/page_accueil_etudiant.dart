@@ -18,11 +18,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context){
     return  Scaffold(
       backgroundColor: Colors.black,
-      bottomNavigationBar: BottomNavigationBar(items:const [
-        BottomNavigationBarItem(icon: Icon(Icons.home),label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.account_circle),label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.notifications),label: ''),
-      ] ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -272,9 +267,9 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async {
                   try {
                     await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in page
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Authentification())); // Return to the sign-in currentPage
                   } catch (e) {
-                    print('Failed to sign out: $e');
+                    debugPrint('Failed to sign out: $e');
                   }
                 },
                 child: const Text('Sign Out'),
