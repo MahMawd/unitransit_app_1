@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 import 'package:unitransit_app_1/pages/page_maps.dart';
@@ -26,9 +27,9 @@ class UniTransitApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return MaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Authentification(),
+      home: MyMaps(),
     );
   }
 }

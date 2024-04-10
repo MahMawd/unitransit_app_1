@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/boutton.dart';
 import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/global/common/toast.dart';
-import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
+import 'package:unitransit_app_1/pages/main_page.dart';
 import 'package:unitransit_app_1/pages/sign_up.dart';
 class Authentification extends StatefulWidget{
-   Authentification({super.key});
+   const Authentification({super.key});
 
   @override
   State<Authentification> createState() => _AuthentificationState();
@@ -30,10 +30,11 @@ class _AuthentificationState extends State<Authentification> {
         email: emailController.text,
         password: passwordController.text,
         );
-    print('Signed in user: ${userCredential.user!.uid}');
+    debugPrint('Signed in user: ${userCredential.user!.uid}');
     Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()), // Replace 'NextPage' with the page you want to navigate to
+        MaterialPageRoute(builder: (context) => const MainPage()),
+
       );
     }on FirebaseAuthException catch(e){
       if(e.code =='invalid-credential'){
@@ -43,16 +44,17 @@ class _AuthentificationState extends State<Authentification> {
       }
       else{
         showToast(message:'Erreur: ${e.code}');
-        print('ERROR:$e');
+        debugPrint('ERROR:$e');
       }
       }on EmptyEmailException catch(e){
         showToast(message:'Erreur:${e.code}');
         }on EmptyPasswordException catch(e){
           showToast(message:'Erreur:${e.code}');
           }catch (e) {
-            print('Failed to sign in: $e');
+            debugPrint('Failed to sign in: $e');
             }
-            }
+}
+            
   @override
   Widget build(BuildContext context){
     return  Scaffold(
