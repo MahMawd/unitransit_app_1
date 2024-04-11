@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 
@@ -14,7 +17,12 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage> {
   List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
+  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
 
+    String selectedStationFrom = 'Campus Manar';
+    String selectedStationTo = 'El Menzah';
+    final TextEditingController searchController = TextEditingController(); // Initially select the first station
+    List<Voyage> voyage = [];
     String selectedStationFrom = 'Campus Manar';
     String selectedStationTo = 'El Menzah';
     final TextEditingController searchController = TextEditingController(); // Initially select the first station
@@ -185,9 +193,18 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children:[              
                     const Icon(
+                child: Row(
+                  children:[              
+                    const Icon(
                     Icons.search,
                     color: Colors.black,
                   ),
+                  const SizedBox(width: 20,),
+                  SizedBox(
+                    height: 50,
+                    width: 270,
+                    child: ElevatedButton(onPressed: (){fetchData(selectedStationFrom,selectedStationTo);}, child: const Text("search"))
+                    )
                   const SizedBox(width: 20,),
                   SizedBox(
                     height: 50,
