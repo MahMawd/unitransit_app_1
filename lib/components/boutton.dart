@@ -11,7 +11,9 @@ final VoidCallback onTap;
   @override
   Widget build(BuildContext context){
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        print('Button tapped'); // Add your print statement here
+        onTap(); },// Call the onTap callback
       child: Container(
         padding:const EdgeInsets.all(25),
         margin:const EdgeInsets.symmetric(horizontal: 75.0),

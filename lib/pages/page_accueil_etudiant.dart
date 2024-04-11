@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 
@@ -17,12 +14,7 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage> {
   List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
-  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
 
-    String selectedStationFrom = 'Campus Manar';
-    String selectedStationTo = 'El Menzah';
-    final TextEditingController searchController = TextEditingController(); // Initially select the first station
-    List<Voyage> voyage = [];
     String selectedStationFrom = 'Campus Manar';
     String selectedStationTo = 'El Menzah';
     final TextEditingController searchController = TextEditingController(); // Initially select the first station
@@ -193,18 +185,9 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children:[              
                     const Icon(
-                child: Row(
-                  children:[              
-                    const Icon(
                     Icons.search,
                     color: Colors.black,
                   ),
-                  const SizedBox(width: 20,),
-                  SizedBox(
-                    height: 50,
-                    width: 270,
-                    child: ElevatedButton(onPressed: (){fetchData(selectedStationFrom,selectedStationTo);}, child: const Text("search"))
-                    )
                   const SizedBox(width: 20,),
                   SizedBox(
                     height: 50,
@@ -223,6 +206,7 @@ class _HomePageState extends State<HomePage> {
           
             Container(
                   padding: const EdgeInsets.all(25),
+                  height: 235,
                   color: Colors.grey[100],
                   child: Center(
                     child: Column(
@@ -241,39 +225,30 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         SizedBox(height: 20),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: voyage.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            Voyage currentVoyage = voyage[index];
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: ListTile(
-                                leading: Icon(Icons.timer),
-                                title: Text('Departure: ${currentVoyage.departureTime}'),
-                                subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation}'),
-                              ),
-                            );
-          },
-        ),
+                        voyage.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: voyage.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              Voyage currentVoyage = voyage[index];
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: ListTile(
+                                  leading: Icon(Icons.timer),
+                                  title: Text('Departure: ${currentVoyage.departureTime}'),
+                                  subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation}'),
+                                ),
+                              );
+                            },
+                          )
+                        : Text("No data"),
       ],
     ),
   ),
 ),
-            ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in currentPage
-                  } catch (e) {
-                    debugPrint('Failed to sign out: $e');
-                  }
-                },
-                child: const Text('Sign Out'),
-              ),
             ],
           ),
         ),
@@ -288,7 +263,7 @@ class _HomePageState extends State<HomePage> {
         .where('ToStation', isEqualTo: stationTo)
         .get();
     if (querySnapshot.docs.isNotEmpty) {
-      var document = querySnapshot.docs.first.data();
+      //var document = querySnapshot.docs.first.data();
       setState(() {
         voyage = querySnapshot.docs.map((doc) {
           return Voyage(
@@ -300,6 +275,9 @@ class _HomePageState extends State<HomePage> {
         }).toList();
       });
     } else {
+      setState(() {
+        voyage.clear();
+      });
       print('No matching documents.');
     }
   } catch (e) {

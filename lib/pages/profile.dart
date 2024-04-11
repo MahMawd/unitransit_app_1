@@ -139,7 +139,7 @@ class GetEtudiant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('etudiant');
+    CollectionReference users = FirebaseFirestore.instance.collection('chauffeur');
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(documentId).get(),
