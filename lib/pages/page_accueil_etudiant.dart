@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/components/zone_texte.dart';
-import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -13,11 +10,11 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
+  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4'];
 
     String selectedStationFrom = 'Campus Manar';
     String selectedStationTo = 'El Menzah';
-    final TextEditingController searchController = TextEditingController(); // Initially select the first station
+    final TextEditingController searchController = TextEditingController();
     List<Voyage> voyage = [];
   @override 
   Widget build(BuildContext context){
@@ -55,8 +52,6 @@ class _HomePageState extends State<HomePage> {
                 )
                ],
                        ),
-                       
-                //notfication
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.blue,
@@ -65,14 +60,11 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(12),
                   child: const Icon(
                     Icons.notifications,
-                    color: Colors.white,),
-                       
+                    color: Colors.white,), 
                 )
                 ],
                ),
-               //bch tba3d choose your placement al box loc
               const SizedBox(height: 20,),
-               //box locationn
               Container(
                 width: 400,
                 decoration: BoxDecoration(
@@ -245,16 +237,16 @@ class _HomePageState extends State<HomePage> {
                             },
                           )
                         : Text("No data"),
-      ],
-    ),
-  ),
-),
-            ],
-          ),
-        ),
-      )
-    );
-  }
+                                ],
+                              ),
+                            ),
+                          ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              );
+                            }
  Future<void> fetchData(String stationFrom,String stationTo) async {
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
