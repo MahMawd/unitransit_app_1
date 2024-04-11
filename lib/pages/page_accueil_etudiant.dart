@@ -11,11 +11,17 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage> {
   List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4'];
-
+  List<String> stationName =[];
+  
     String selectedStationFrom = 'Campus Manar';
     String selectedStationTo = 'El Menzah';
     final TextEditingController searchController = TextEditingController();
     List<Voyage> voyage = [];
+    @override
+  void initState() {
+    super.initState();
+    fetchStationNames();
+  }
   @override 
   Widget build(BuildContext context){
     return  Scaffold(
@@ -247,6 +253,7 @@ class _HomePageState extends State<HomePage> {
                                 )
                               );
                             }
+  
  Future<void> fetchData(String stationFrom,String stationTo) async {
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -276,6 +283,19 @@ class _HomePageState extends State<HomePage> {
     print('Error fetching data: $e');
   }
 }
+Future<void> fetchStationNames() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('station').get();
+
+      setState(() {
+        stationName = querySnapshot.docs.map((doc) => doc['nom'] as String).toList();
+        print(stationName);
+      });
+    } catch (e) {
+      print("Error fetching station names: $e");
+    }
+  }
 }
 class Voyage {
   final String departureTime;
