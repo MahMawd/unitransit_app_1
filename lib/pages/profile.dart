@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:unitransit_app_1/pages/page_authentification.dart';
 import 'package:unitransit_app_1/pages/update_profile.dart';
 
 class ProfileScreen extends StatelessWidget{
@@ -27,7 +28,6 @@ class ProfileScreen extends StatelessWidget{
                   width: 120,
                   height: 120,
                   child: ClipRRect(
-        
                   ),
                 ),
                 const SizedBox(height:10),
@@ -64,7 +64,18 @@ class ProfileScreen extends StatelessWidget{
                  }
                  ),*/
                  GetEtudiant(_uid!),
-                 ProfileMenuWidget(title:"Log out" ,subtitle: 'goodbye',icon:Icons.logout ,onPress: (){},endIcon: false,textColor: Colors.red,),
+                 //ProfileMenuWidget(title:"Log out" ,subtitle: 'goodbye',icon:Icons.logout ,onPress: (){},endIcon: false,textColor: Colors.red,),
+                  ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in currentPage
+                  } catch (e) {
+                    debugPrint('Failed to sign out: $e');
+                  }
+                },
+                child: const Text('Sign Out'),
+              ),
               ],
             ),
           ),
