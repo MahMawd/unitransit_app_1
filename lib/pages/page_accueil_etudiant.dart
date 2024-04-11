@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class HomePage extends StatefulWidget{
@@ -10,10 +13,12 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> stations = ['Tunis Marine', 'Station 2', 'Station 3', 'Station 4']; // Add your station names here
+  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
 
-    String selectedStationFrom = 'Tunis Marine';
-    String selectedStationTo = 'Tunis Marine'; // Initially select the first station
+    String selectedStationFrom = 'Campus Manar';
+    String selectedStationTo = 'El Menzah';
+    final TextEditingController searchController = TextEditingController(); // Initially select the first station
+    List<Voyage> voyage = [];
   @override 
   Widget build(BuildContext context){
     return  Scaffold(
@@ -177,21 +182,18 @@ class _HomePageState extends State<HomePage> {
                 ),
                 padding: const EdgeInsets.all(12), //el 3ordh mta3 box 
                 // fi west box search
-                child: const Row(
-                  children: [              
-                    Icon(
+                child: Row(
+                  children:[              
+                    const Icon(
                     Icons.search,
                     color: Colors.black,
                   ),
-                    
-                   Text(
-                    'search',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const SizedBox(width: 20,),
+                  SizedBox(
+                    height: 50,
+                    width: 270,
+                    child: ElevatedButton(onPressed: (){fetchData(selectedStationFrom,selectedStationTo);}, child: const Text("search"))
+                    )
                  ],
                 ),
                          ),
@@ -201,68 +203,49 @@ class _HomePageState extends State<HomePage> {
              const SizedBox(
               height: 25,
              ),
-              Container(
-                padding: const EdgeInsets.all(25),
-              color: Colors.grey[100],
-              child:  Center(
-                child: Column(
-                  children: [
-                   const  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          
+            Container(
+                  padding: const EdgeInsets.all(25),
+                  color: Colors.grey[100],
+                  child: Center(
+                    child: Column(
                       children: [
-                        Text(
-                          'Times',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Times',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            Icon(Icons.more_horiz),
+                          ],
                         ),
-                        Icon(Icons.more_horiz),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    //list of time
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const ListTile(leading: Icon(Icons.timer),
-                      title: Text('Departure'),
-                      subtitle: Text('14:30'),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                     Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const ListTile(leading: Icon(Icons.timer),
-                      title: Text('Departure'),
-                      subtitle: Text('15:30'),
-                      ),
-                    ),
-                    const SizedBox(height: 20,
-                    ),
-                     Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const ListTile(leading: Icon(Icons.timer),
-                      title: Text('Departure'),
-                      subtitle: Text('16:30'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                        SizedBox(height: 20),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: voyage.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            Voyage currentVoyage = voyage[index];
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: ListTile(
+                                leading: Icon(Icons.timer),
+                                title: Text('Departure: ${currentVoyage.departureTime}'),
+                                subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation}'),
+                              ),
+                            );
+          },
+        ),
+      ],
+    ),
+  ),
+),
             ElevatedButton(
                 onPressed: () async {
                   try {
@@ -280,4 +263,43 @@ class _HomePageState extends State<HomePage> {
       )
     );
   }
+ Future<void> fetchData(String stationFrom,String stationTo) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('voyage')
+        .where('fromStation', isEqualTo: stationFrom)
+        .where('ToStation', isEqualTo: stationTo)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      var document = querySnapshot.docs.first.data();
+      setState(() {
+        voyage = querySnapshot.docs.map((doc) {
+          return Voyage(
+            departureTime: doc['departureTime'],
+            arrivalTime: doc['arrivaltime'],
+            fromStation: doc['fromStation'],
+            toStation: doc['ToStation'],
+          );
+        }).toList();
+      });
+    } else {
+      print('No matching documents.');
+    }
+  } catch (e) {
+    print('Error fetching data: $e');
+  }
+}
+}
+class Voyage {
+  final String departureTime;
+  final String arrivalTime;
+  final String fromStation;
+  final String toStation;
+
+  Voyage({
+    required this.departureTime,
+    required this.arrivalTime,
+    required this.fromStation,
+    required this.toStation,
+  });
 }

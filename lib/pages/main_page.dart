@@ -3,12 +3,12 @@ import 'package:unitransit_app_1/pages/notification_etudiant.dart';
 import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
 import 'package:unitransit_app_1/pages/profile.dart';
 
-class MainPage extends StatefulWidget{
-  const MainPage({super.key});
+class MainPageEtudiant extends StatefulWidget{
+  const MainPageEtudiant({super.key});
   @override
-  State<MainPage> createState()=>_MainPageState();
+  State<MainPageEtudiant> createState()=>_MainPageState();
 }
-class _MainPageState extends State<MainPage>{
+class _MainPageState extends State<MainPageEtudiant>{
   int currentPage=0;
   List<Widget> pages=[
     const HomePage(),

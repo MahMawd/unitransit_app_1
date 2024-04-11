@@ -1,8 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:unitransit_app_1/pages/main_page_chauff.dart';
+import 'package:unitransit_app_1/pages/page_accueil.dart';
+import 'package:unitransit_app_1/pages/page_accueil_chauffeur.dart';
+import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 import 'package:unitransit_app_1/pages/page_maps.dart';
+import 'package:unitransit_app_1/pages/sign_up_chauff.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 //import 'package:unitransit_app/pages/page_accueil.dart';
@@ -29,7 +34,7 @@ class UniTransitApp extends StatelessWidget{
   Widget build(BuildContext context){
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyMaps(),
+      home: HomePageChauffeur(),
     );
   }
 }
