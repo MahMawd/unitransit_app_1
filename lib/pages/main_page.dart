@@ -12,7 +12,7 @@ class _MainPageState extends State<MainPage>{
   int currentPage=0;
   List<Widget> pages=[
     const HomePage(),
-    const ProfileScreen(),
+    ProfileScreen(),
     const NotificationView(),
   ];
   @override
