@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                                 child: ListTile(
                                   leading: Icon(Icons.timer),
                                   title: Text('Departure: ${currentVoyage.departureTime}'),
-                                  subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation}'),
+                                  subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
                                 ),
                               );
                             },
