@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/components/zone_texte.dart';
-import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -13,12 +10,18 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4']; // Add your station names here
-
-    String selectedStationFrom = 'Campus Manar';
-    String selectedStationTo = 'El Menzah';
-    final TextEditingController searchController = TextEditingController(); // Initially select the first station
+  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4'];
+  List<String> stationName =[];
+  
+    String selectedStationFrom = '0';
+    String selectedStationTo = '0';
+    final TextEditingController searchController = TextEditingController();
     List<Voyage> voyage = [];
+    @override
+  void initState() {
+    super.initState();
+    fetchStationNames();
+  }
   @override 
   Widget build(BuildContext context){
     return  Scaffold(
@@ -55,8 +58,6 @@ class _HomePageState extends State<HomePage> {
                 )
                ],
                        ),
-                       
-                //notfication
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.blue,
@@ -65,14 +66,11 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(12),
                   child: const Icon(
                     Icons.notifications,
-                    color: Colors.white,),
-                       
+                    color: Colors.white,), 
                 )
                 ],
                ),
-               //bch tba3d choose your placement al box loc
               const SizedBox(height: 20,),
-               //box locationn
               Container(
                 width: 400,
                 decoration: BoxDecoration(
@@ -87,38 +85,43 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.black),
                      const SizedBox(width:10,),
                       const Text("From"),
-                      const SizedBox(width:10,),
-                        SizedBox(
-                          height: 60.0,
-                          width: 250.0,
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0),)
+                      const SizedBox(width:5,),
+                      SizedBox(
+                        width: 264,
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection('station').snapshots(), 
+                        builder:(context,snapshot){
+                          List<DropdownMenuItem> stationItems = [];
+                          if(!snapshot.hasData)
+                          {
+                            const CircularProgressIndicator();
+                          }
+                          else {
+                            final stations =snapshot.data?.docs.reversed.toList();
+                            stationItems.add(DropdownMenuItem(
+                              value: '0',
+                              child: Text('Select Station'))
+                              );
+                            for(var s in stations!){
+                              stationItems.add(DropdownMenuItem(
+                                value: s.data()['nom'],
+                                child: Text(s['nom']),
                                 ),
-                                fillColor: Colors.white,
-                                filled: true,
-                              ),
-                              value: selectedStationFrom,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    selectedStationFrom = newValue;
-                                    });
-                                  }
-                                },
-                                items: stations.map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                    );
-                                  }).toList(),
-                              ),
-                          ),
-                        ),
+                                );
+                            }
+                          }
+                          return DropdownButton(items: stationItems,
+                           onChanged: (sValue){
+                            //print(sValue);
+                            setState(() {
+                              selectedStationFrom = sValue;
+                            });
+                           },
+                           value:selectedStationFrom,
+                           isExpanded: false,
+                           );
+                        }),
+                      )
                       ],
                     ),
 
@@ -133,43 +136,45 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(12),
                     child:Row(
                       children: <Widget>[
-                        const Icon(
+                        Icon(
                       Icons.location_on,
                       color: Colors.black),
-                     const SizedBox(width:10,),
-                      const Text("To"),
-                      const SizedBox(width:25,),
-                        SizedBox(
-                          height: 60.0,
-                          width: 250.0,
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButtonFormField<String>(
-                              isExpanded: true,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0),)
-                                ),
-                                fillColor: Colors.white,
-                                filled: true,
+                     SizedBox(width:10,),
+                      Text("To"),
+                      SizedBox(width:20,),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance.collection('station').snapshots(), 
+                      builder:(context,snapshot){
+                        List<DropdownMenuItem> stationItems = [];
+                        if(!snapshot.hasData)
+                        {
+                          const CircularProgressIndicator();
+                        }
+                        else {
+                          final stations =snapshot.data?.docs.reversed.toList();
+                          stationItems.add(DropdownMenuItem(
+                            value: '0',
+                            child: Text('Select Station'))
+                            );
+                          for(var s in stations!){
+                            stationItems.add(DropdownMenuItem(
+                              value: s.data()['nom'],
+                              child: Text(s['nom']),
                               ),
-                              value: selectedStationTo,
-                              onChanged: (String? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    selectedStationTo = newValue;
-                                    });
-                                  }
-                                },
-                                items: stations.map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                    );
-                                  }).toList(),
-                              ),
-                          ),
-                        ),
+                              );
+                          }
+                        }
+                        return DropdownButton(items: stationItems,
+                         onChanged: (sValue){
+                          //print(sValue);
+                          setState(() {
+                            selectedStationTo = sValue;
+                          });
+                         },
+                         value:selectedStationTo,
+                         isExpanded: false,
+                         );
+                      })
                       ],
                     ),
               ),
@@ -180,8 +185,8 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.all(12), //el 3ordh mta3 box 
-                // fi west box search
+                padding: const EdgeInsets.all(12),
+
                 child: Row(
                   children:[              
                     const Icon(
@@ -239,22 +244,23 @@ class _HomePageState extends State<HomePage> {
                                 child: ListTile(
                                   leading: Icon(Icons.timer),
                                   title: Text('Departure: ${currentVoyage.departureTime}'),
-                                  subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation}'),
+                                  subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
                                 ),
                               );
                             },
                           )
                         : Text("No data"),
-      ],
-    ),
-  ),
-),
-            ],
-          ),
-        ),
-      )
-    );
-  }
+                                ],
+                              ),
+                            ),
+                          ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              );
+                            }
+  
  Future<void> fetchData(String stationFrom,String stationTo) async {
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -262,6 +268,8 @@ class _HomePageState extends State<HomePage> {
         .where('fromStation', isEqualTo: stationFrom)
         .where('ToStation', isEqualTo: stationTo)
         .get();
+        print(stationFrom);
+        print(stationTo);
     if (querySnapshot.docs.isNotEmpty) {
       //var document = querySnapshot.docs.first.data();
       setState(() {
@@ -284,6 +292,19 @@ class _HomePageState extends State<HomePage> {
     print('Error fetching data: $e');
   }
 }
+Future<void> fetchStationNames() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('station').get();
+
+      setState(() {
+        stationName = querySnapshot.docs.map((doc) => doc['nom'] as String).toList();
+        print(stationName);
+      });
+    } catch (e) {
+      print("Error fetching station names: $e");
+    }
+  }
 }
 class Voyage {
   final String departureTime;
