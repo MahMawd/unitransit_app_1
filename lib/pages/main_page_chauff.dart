@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/pages/notification_etudiant.dart';
 import 'package:unitransit_app_1/pages/page_accueil_chauffeur.dart';
-import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
-import 'package:unitransit_app_1/pages/profile.dart';
+import 'package:unitransit_app_1/pages/profile_chauffeur.dart';
 
 class HomePageChauffeur extends StatefulWidget{
   const HomePageChauffeur({super.key});
@@ -13,7 +12,7 @@ class _HomePageChauffeur extends State<HomePageChauffeur>{
   int currentPage=0;
   List<Widget> pages=[
     const MainPageChauffeur(),
-    ProfileScreen(),
+    ProfileScreenChauffeur(),
     const NotificationView(),
   ];
   @override

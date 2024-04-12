@@ -50,52 +50,54 @@ class _SignUpState extends State<SignUp> {
         email: emailController.text,
         password: passwordController.text,
       );
-      // Get the user's ID
+
     final String userId = userCredential.user!.uid;
 
-    // Create a new document in Firestore for the user
     await FirebaseFirestore.instance.collection('etudiant').doc(userId).set({
       'CIN':cinController.text,
       'email': emailController.text,
       'name':nameController.text,
       'password':passwordController.text,
       'username':usernameController.text,
-      // Add other user information as needed
+
     });
 
-    // Sign up success, navigate to next page or do something else
     debugPrint('Signed up user: $userId');
-    showToast(message: 'Compte créé');
+    showToast(message: 'Account successfully signed up');
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const Authentification()),
+  );
   }on FirebaseAuthException catch(e){
     if(e.code=='email-already-in-use'){
-      showToast(message:'Cette adresse email est déjà utilisée');
+      showToast(message:'Email already in use');
     }else if(e.code=='invalid-email'){
-      showToast(message:'Email invalide');
+      showToast(message:'Invalid email');
     }
     else if(e.code=='weak-password'){
-      showToast(message: 'Le mot de passe doit contenir au moins 6 caractères');
+      showToast(message: 'The password must atleast contain 6 characters');
     }
     else {
-      showToast(message:'Erreur:${e.code}');
+      showToast(message:'Error: ${e.code}');
     }
   }on EmptyNameException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }on EmptyUsernameException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }on EmptyEmailException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }
   on EmptyPasswordException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }
   on EmptyConfirmPasswordException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }
   on PasswordMisMatchException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }
   on EmptyCINException catch(e){
-    showToast(message:'Erreur:${e.code}');
+    showToast(message:'Error: ${e.code}');
   }
    catch (e) {
     // Show error message
@@ -131,13 +133,13 @@ class _SignUpState extends State<SignUp> {
                 ZoneTexte(
                   controller: nameController,
                   obscureText: false,
-                  hintText: "Nom complet",
+                  hintText: "Full name",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
                   controller: usernameController,
                   obscureText: false,
-                  hintText: "Nom d'utilisateur",
+                  hintText: "Username",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
@@ -149,13 +151,13 @@ class _SignUpState extends State<SignUp> {
                 ZoneTexte(
                   controller: passwordController,
                   obscureText: true,
-                  hintText: "Mot de passe",
+                  hintText: "Password",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
                   controller: confirmPasswordController,
                   obscureText: true,
-                  hintText: "Confirmer le mot de passe",
+                  hintText: "Confirm password",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
@@ -166,21 +168,21 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 30.0),
                 Boutton(
                   onTap:_signUp,
-                  text: "Créer un compte",
+                  text: "Create account",
                 ),
                 const SizedBox(height: 30.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Déjà un compte? "),
+                    const Text("Already have an account? "),
                     GestureDetector(
                       onTap:(){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const Authentification())); // Navigate to SignUp page
+                          MaterialPageRoute(builder: (context) => const Authentification()));
                           },
                       child: const Text(
-                        "Connectez-vous",
+                        "Connect",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
@@ -198,28 +200,27 @@ class _SignUpState extends State<SignUp> {
   }
 }
 class EmptyCINException implements Exception {
-  String code ='Remplir le CIN';
+  String code ='Type in CIN';
 }
 class EmptyConfirmPasswordException implements Exception {
-  String code ='Confirmer le mot de passe';
+  String code ='Confirm the password';
 }
 class EmptyPasswordException implements Exception {
-  String code ='Remplir mot de passe';
+  String code ='Type in password';
 }
 class EmptyEmailException implements Exception {
-  String code ='Remplir Email';
+  String code ='Type in email';
 }
 class EmptyUsernameException implements Exception {
-  String code='Remplir le nom d\'utilisateur';
+  String code='Type in username';
 }
 
 class EmptyNameException implements Exception {
-  String code='Remplir le nom complet';
+  String code='Type in full name';
 }
 
 class PasswordMisMatchException implements Exception{
-  String errorMessage() =>'Les mots de passe ne correspondent pas';
-  String code='Les mots de passe ne correspondent pas';
+  String code='The passwords do not match';
 }
 
 

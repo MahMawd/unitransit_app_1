@@ -6,7 +6,7 @@ import 'package:unitransit_app_1/components/zone_texte.dart';
 import 'package:unitransit_app_1/global/common/toast.dart';
 import 'package:unitransit_app_1/pages/main_page.dart';
 import 'package:unitransit_app_1/pages/main_page_chauff.dart';
-import 'package:unitransit_app_1/pages/page_accueil_chauffeur.dart';
+
 import 'package:unitransit_app_1/pages/sign_up.dart';
 class Authentification extends StatefulWidget{
    const Authentification({super.key});
@@ -48,13 +48,21 @@ class _AuthentificationState extends State<Authentification> {
       // Handle other user types if needed
     }
   } on FirebaseAuthException catch (e) {
-    // Handle FirebaseAuthExceptions
+    if(e.code =='invalid-credential'){
+        showToast(message:'Invalid email or password');
+      }else if(e.code=='channel-error'){
+        showToast(message: 'Type in the email and password');
+      }
+      else{
+        showToast(message:'Error: ${e.code}');
+        debugPrint('ERROR:$e');
+      }
   } on EmptyEmailException catch (e) {
-    // Handle EmptyEmailException
+    showToast(message:'Error: ${e.code}');
   } on EmptyPasswordException catch (e) {
-    // Handle EmptyPasswordException
+    showToast(message:'Error: ${e.code}');
   } catch (e) {
-    // Handle other exceptions
+    debugPrint('Failed to sign in: $e');
   }
 }
 
@@ -119,7 +127,7 @@ Future<String> _getUserType(String uid) async {
                 ZoneTexte(
                   controller: passwordController,
                   obscureText: true,
-                  hintText: "Mot de passe",
+                  hintText: "Password",
                 ),
                 const SizedBox(height: 10.0),
                 const Padding(
@@ -127,18 +135,18 @@ Future<String> _getUserType(String uid) async {
                   child:  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("Mot de Passe oublié"),
+                      Text("Forgot password"),
                     ],
                   ),
                 ),
               const SizedBox(height: 30.0),
               Boutton(
                 onTap:()=>_signIn(),
-                text: "Se connecter",
+                text: "Sign in",
               ),
               const SizedBox(height: 30.0),
               Boutton(
-                text: "Créer nouveau compte",
+                text: "Create an account",
                 onTap:(){
                    Navigator.push(
               context,

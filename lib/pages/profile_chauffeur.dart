@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:unitransit_app_1/components/profile_widget.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
+import 'package:unitransit_app_1/pages/update_profile.dart';
 
-class ProfileScreen extends StatelessWidget{
-  ProfileScreen({super.key});
+class ProfileScreenChauffeur extends StatelessWidget{
+  ProfileScreenChauffeur({super.key});
   final String? _uid=FirebaseAuth.instance.currentUser?.uid;
 
   @override 
@@ -61,7 +64,7 @@ class ProfileScreen extends StatelessWidget{
                   );
                  }
                  ),*/
-                 GetProfile(_uid!,'etudiant'),
+                 GetProfile(_uid!,'chauffeur'),
                  //ProfileMenuWidget(title:"Log out" ,subtitle: 'goodbye',icon:Icons.logout ,onPress: (){},endIcon: false,textColor: Colors.red,),
                   ElevatedButton(
                 onPressed: () async {

@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                             Icon(Icons.more_horiz),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         voyage.isNotEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
