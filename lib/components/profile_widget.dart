@@ -5,7 +5,7 @@ import 'package:unitransit_app_1/components/profile_menu_widget.dart';
 class GetProfile extends StatelessWidget {
   final String documentId;
   final String collectionName;
-  GetProfile(this.documentId,this.collectionName);
+  const GetProfile(this.documentId,this.collectionName, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +17,11 @@ class GetProfile extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
         if (snapshot.hasError) {
-          return Text("Something went wrong");
+          return const Text("Something went wrong");
         }
 
         if (snapshot.hasData && !snapshot.data!.exists) {
-          return Text("Document does not exist");
+          return const Text("Document does not exist");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {

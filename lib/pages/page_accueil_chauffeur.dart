@@ -6,7 +6,7 @@ class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
 
   @override
-  _MainPageChauffeurState createState() => _MainPageChauffeurState();
+  State<MainPageChauffeur> createState() => _MainPageChauffeurState();
 }
 
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
@@ -50,10 +50,10 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           }).toList();
         });
       } else {
-        print('No planned trips found for the driver.');
+        debugPrint('No planned trips found for the driver.');
       }
     } catch (e) {
-      print('Error fetching planned trips: $e');
+      debugPrint('Error fetching planned trips: $e');
     }
   }
 
@@ -61,18 +61,16 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Driver Home Page'),
+        title: const Text('Driver Home Page'),
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
-              // Sign out the driver
               try {
                 await FirebaseAuth.instance.signOut();
-                // Navigate to the authentication page
                 Navigator.pushReplacementNamed(context, '/auth');
               } catch (e) {
-                print('Failed to sign out: $e');
+                debugPrint('Failed to sign out: $e');
               }
             },
           ),
@@ -90,7 +88,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                 );
               },
             )
-          : Center(
+          : const Center(
               child: Text('No planned trips for the driver.'),
             ),
     );

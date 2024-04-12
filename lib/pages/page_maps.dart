@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:unitransit_app_1/global/global_var.dart';
-import 'package:unitransit_app_1/pages/page_authentification.dart';
 
 class MyMaps extends StatefulWidget{
   const MyMaps({super.key});

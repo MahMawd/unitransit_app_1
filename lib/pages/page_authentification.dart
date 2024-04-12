@@ -36,7 +36,7 @@ class _AuthentificationState extends State<Authentification> {
     
     // Determine user type based on collection
     String userType = await _getUserType(userCredential.user!.uid);
-    print(userType);
+    debugPrint(userType);
     // Navigate to appropriate page or perform actions based on user type
     if (userType == 'etudiant') {
       // Do something specific for 'etudiant' users

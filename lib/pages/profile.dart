@@ -67,7 +67,7 @@ class ProfileScreen extends StatelessWidget{
                 onPressed: () async {
                   try {
                     await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in currentPage
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Authentification())); // Return to the sign-in currentPage
                   } catch (e) {
                     debugPrint('Failed to sign out: $e');
                   }

@@ -12,7 +12,7 @@ final VoidCallback onTap;
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: () {
-        print('Button tapped'); // Add your print statement here
+        debugPrint('Button tapped'); // Add your print statement here
         onTap(); },// Call the onTap callback
       child: Container(
         padding:const EdgeInsets.all(25),

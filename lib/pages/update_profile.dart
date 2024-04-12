@@ -3,11 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unitransit_app_1/global/common/toast.dart';
-import 'package:unitransit_app_1/pages/profile.dart';
 
 class UpdateProfile extends StatelessWidget{
    UpdateProfile ({super.key});
-   final FirebaseAuth _auth=FirebaseAuth.instance;
+   //final FirebaseAuth _auth=FirebaseAuth.instance;
    final TextEditingController usernameController = TextEditingController();
    final TextEditingController emailController = TextEditingController();
    final TextEditingController passwordController = TextEditingController();
@@ -15,8 +14,8 @@ class UpdateProfile extends StatelessWidget{
 
    Future<void> update() async {
     try {
-        final String? _uid=FirebaseAuth.instance.currentUser?.uid;
-        await FirebaseFirestore.instance.collection('etudiant').doc(_uid).set({
+        final String? uid=FirebaseAuth.instance.currentUser?.uid;
+        await FirebaseFirestore.instance.collection('etudiant').doc(uid).set({
         'CIN':cinController.text,
         'email': emailController.text,
         'password':passwordController.text,

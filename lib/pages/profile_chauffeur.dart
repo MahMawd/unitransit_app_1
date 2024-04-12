@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:unitransit_app_1/components/profile_widget.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
-import 'package:unitransit_app_1/pages/update_profile.dart';
 
 class ProfileScreenChauffeur extends StatelessWidget{
   ProfileScreenChauffeur({super.key});
@@ -70,7 +67,7 @@ class ProfileScreenChauffeur extends StatelessWidget{
                 onPressed: () async {
                   try {
                     await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Authentification())); // Return to the sign-in currentPage
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Authentification())); // Return to the sign-in currentPage
                   } catch (e) {
                     debugPrint('Failed to sign out: $e');
                   }

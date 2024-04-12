@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                           }
                           else {
                             final stations =snapshot.data?.docs.reversed.toList();
-                            stationItems.add(DropdownMenuItem(
+                            stationItems.add(const DropdownMenuItem(
                               value: '0',
                               child: Text('Select Station'))
                               );
@@ -136,12 +136,12 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(12),
                     child:Row(
                       children: <Widget>[
-                        Icon(
+                        const Icon(
                       Icons.location_on,
                       color: Colors.black),
-                     SizedBox(width:10,),
-                      Text("To"),
-                      SizedBox(width:20,),
+                     const SizedBox(width:10,),
+                      const Text("To"),
+                      const SizedBox(width:20,),
                       StreamBuilder(
                         stream: FirebaseFirestore.instance.collection('station').snapshots(), 
                       builder:(context,snapshot){
@@ -152,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                         }
                         else {
                           final stations =snapshot.data?.docs.reversed.toList();
-                          stationItems.add(DropdownMenuItem(
+                          stationItems.add(const DropdownMenuItem(
                             value: '0',
                             child: Text('Select Station'))
                             );
@@ -205,8 +205,8 @@ class _HomePageState extends State<HomePage> {
                     height: 50,
                     width: 270,
                     child: ElevatedButton(onPressed: (){fetchData(selectedStationFrom,selectedStationTo);},
+                     style: ElevatedButton.styleFrom(backgroundColor: Colors.white,),
                      child: const Text("Search"),
-                     style: ElevatedButton.styleFrom(backgroundColor: Colors.white,)
                      ),
                     ),
                  ],
@@ -242,18 +242,18 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(height: 20),
                         voyage.isNotEmpty
                         ? ListView.builder(
+                          //padding: const EdgeInsets.only(bottom: 20.0),
                             shrinkWrap: true,
                             itemCount: voyage.length,
                             itemBuilder: (BuildContext context, int index) {
                               Voyage currentVoyage = voyage[index];
                               return Container(
-                                padding: EdgeInsets.only(bottom: 10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: ListTile(
-                                  leading: Icon(Icons.timer),
+                                  leading: const Icon(Icons.timer),
                                   title: Text('Departure: ${currentVoyage.departureTime}'),
                                   subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
                                 ),
@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           )
-                        : Text("No data"),
+                        : const Text("No data"),
                                 ],
                               ),
                             ),
@@ -280,8 +280,8 @@ class _HomePageState extends State<HomePage> {
         .where('fromStation', isEqualTo: stationFrom)
         .where('ToStation', isEqualTo: stationTo)
         .get();
-        print(stationFrom);
-        print(stationTo);
+        debugPrint(stationFrom);
+        debugPrint(stationTo);
     if (querySnapshot.docs.isNotEmpty) {
       //var document = querySnapshot.docs.first.data();
       setState(() {
@@ -298,10 +298,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         voyage.clear();
       });
-      print('No matching documents.');
+      debugPrint('No matching documents.');
     }
   } catch (e) {
-    print('Error fetching data: $e');
+    debugPrint('Error fetching data: $e');
   }
 }
 Future<void> fetchStationNames() async {
@@ -311,10 +311,10 @@ Future<void> fetchStationNames() async {
 
       setState(() {
         stationName = querySnapshot.docs.map((doc) => doc['nom'] as String).toList();
-        print(stationName);
+        debugPrint('$stationName');
       });
     } catch (e) {
-      print("Error fetching station names: $e");
+      debugPrint("Error fetching station names: $e");
     }
   }
 }
