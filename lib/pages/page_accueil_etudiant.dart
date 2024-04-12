@@ -181,24 +181,34 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 25,),
 
                Container(
-                decoration: BoxDecoration(
+                /*decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                ),
+                ),*/
                 padding: const EdgeInsets.all(12),
-
                 child: Row(
                   children:[              
-                    const Icon(
+                    /*const Icon(
                     Icons.search,
                     color: Colors.black,
-                  ),
+                  ),*/
                   const SizedBox(width: 20,),
+                  const SizedBox(
+                    height: 20,
+                    width: 30,
+                    child:Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  ),
                   SizedBox(
                     height: 50,
                     width: 270,
-                    child: ElevatedButton(onPressed: (){fetchData(selectedStationFrom,selectedStationTo);}, child: const Text("search"))
-                    )
+                    child: ElevatedButton(onPressed: (){fetchData(selectedStationFrom,selectedStationTo);},
+                     child: const Text("Search"),
+                     style: ElevatedButton.styleFrom(backgroundColor: Colors.white,)
+                     ),
+                    ),
                  ],
                 ),
                          ),
@@ -211,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           
             Container(
                   padding: const EdgeInsets.all(25),
-                  height: 235,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   color: Colors.grey[100],
                   child: Center(
                     child: Column(
@@ -237,6 +247,7 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (BuildContext context, int index) {
                               Voyage currentVoyage = voyage[index];
                               return Container(
+                                padding: EdgeInsets.only(bottom: 10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(16),
@@ -246,6 +257,7 @@ class _HomePageState extends State<HomePage> {
                                   title: Text('Departure: ${currentVoyage.departureTime}'),
                                   subtitle: Text('From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
                                 ),
+                                
                               );
                             },
                           )

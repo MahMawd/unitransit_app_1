@@ -38,7 +38,15 @@ class GetProfile extends StatelessWidget {
               ProfileMenuWidget(title:"CIN" ,subtitle: '${data['CIN']}',icon:Icons.edit ,onPress: (){},endIcon: false,textColor: Colors.black,),
           ],);
         }
-        return Text("loading");
+        return const Column(
+          children: [
+            SizedBox(height: 30),
+              Divider(),
+              SizedBox(height: 10),
+            Text("loading"),
+            CircularProgressIndicator(),
+          ],
+        );
       },
     );
   }

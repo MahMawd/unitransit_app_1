@@ -10,13 +10,13 @@ class ProfileScreen extends StatelessWidget{
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text("Profile",
         style: Theme.of(context).textTheme.headlineMedium ),
         actions: const [
 
         ],
-      ),
+      ),*/
       body:SingleChildScrollView(
         child: Container(
             padding: const EdgeInsets.all(10),
