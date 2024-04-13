@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/components/bus.dart';
+import 'package:unitransit_app_1/components/bus_widget.dart';
 
 class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
@@ -107,23 +107,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-    appBar: AppBar(
-      title: const Text('Main Page'),
-    ),
-    body: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Add your widgets here to decorate the space above the list view
-        // For example:
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: const Text(
-            'Welcome to the main page!',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-        ),
-    
+    return 
     FutureBuilder<String>(
       future: driverState, 
       builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
@@ -190,10 +174,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           }
         }
       },
-    )
-    ]
-  ),
-  );
+    );
   }
 }
 
