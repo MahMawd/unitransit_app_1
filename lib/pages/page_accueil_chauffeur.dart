@@ -3,7 +3,6 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/components/bus_widget.dart';
 
 class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
@@ -107,35 +106,37 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    FutureBuilder<String>(
+    return FutureBuilder<String>(
       future: driverState, 
       builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
         if(snapshot.connectionState==ConnectionState.waiting){
-          return const Center(child: CircularProgressIndicator());
+          return CircularProgressIndicator();
         }
         else if(snapshot.hasError){
-          return Center(child: Text('Error ${snapshot.error}'));
+          return Text('Error ${snapshot.error}');
         }
         else {
           String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
           print(driverStateValue);
           if(driverStateValue == 'not_driving'){
-            return availableBus.isNotEmpty ?
-              ListView.separated(
-                separatorBuilder:(context,index){return const SizedBox(height: 10,);},
+            return Scaffold(
+              body: availableBus.isNotEmpty ?
+              ListView.builder(
                 itemCount: availableBus.length,
                 itemBuilder: (context, index) {
                   Bus aBus = availableBus[index];
-                  return BusWidget(
-                    test:ListTile(
-                      title: Text('Bus name: ${aBus.nom}'),
-                      subtitle:const Text("Disponible"),
+                  return Container(
+                    height: 70,
+                    width: 370,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),color: Colors.grey.shade300,),
+                    child: ListTile(
+                      title: Text('Name: ${aBus.nom}'),
                       ),
-                      );
+                  );
                   },
               ):
-        const Center(child: Text("no buses"),);
+        const Center(child: Text("no buses"),),
+            );
           }
           else {
             return Scaffold(
@@ -175,6 +176,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
         }
       },
     );
+    
   }
 }
 
