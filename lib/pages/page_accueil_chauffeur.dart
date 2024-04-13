@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +14,15 @@ class MainPageChauffeur extends StatefulWidget {
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
   late String driverId; // Id of the current driver
   List<Voyage> plannedTrips = []; // List to hold planned trips
-
+  List<Bus> availableBus=[];
+  late Future<String> driverState;
   @override
   void initState() {
     super.initState();
     // Fetch the driver's ID once the widget initializes
     fetchDriverId();
+    driverState = checkIsDriverDrivingBus();
+    fetchAvailableBuses();
   }
 
   Future<void> fetchDriverId() async {
@@ -31,7 +36,49 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       await fetchPlannedTrips();
     }
   }
-
+  Future<void> fetchAvailableBuses() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('bus')
+          .where('disponible', isEqualTo: true)
+          .where('driverId', isEqualTo: '')
+          .get();
+          if(querySnapshot.docs.isNotEmpty){
+            setState(() {
+              availableBus = querySnapshot.docs.map((doc){
+                return Bus(
+                disponible: doc['disponible'],
+                driverId: doc['driverId'],
+                nom: doc['nom'],
+                );
+              }).toList();
+            });
+            print(availableBus);
+          }else{
+            debugPrint('no buses available');
+          }
+    }catch(e){
+      debugPrint('Error fetching available buses: $e');
+    }
+  }
+  Future<String> checkIsDriverDrivingBus() async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      .collection('chauffeur')
+      .doc(driverId)
+      .get();
+      if(documentSnapshot.exists && documentSnapshot['busId']==''){
+        print('driver not driving');
+        return 'not_driving';
+      }else {
+        print('driver driving');
+        return 'driving';
+      }
+    }catch(e){
+      print('Error checking is driver driving bus: $e');
+      return 'error occured';
+    }
+  }
   Future<void> fetchPlannedTrips() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -59,7 +106,40 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return FutureBuilder<String>(
+      future: driverState, 
+      builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
+        if(snapshot.connectionState==ConnectionState.waiting){
+          return CircularProgressIndicator();
+        }
+        else if(snapshot.hasError){
+          return Text('Error ${snapshot.error}');
+        }
+        else {
+          String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
+          print(driverStateValue);
+          if(driverStateValue == 'not_driving'){
+            return Scaffold(
+              body: availableBus.isNotEmpty ?
+              ListView.builder(
+                itemCount: availableBus.length,
+                itemBuilder: (context, index) {
+                  Bus aBus = availableBus[index];
+                  return Container(
+                    height: 70,
+                    width: 370,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),color: Colors.grey.shade300,),
+                    child: ListTile(
+                      title: Text('Name: ${aBus.nom}'),
+                      ),
+                  );
+                  },
+              ):
+        const Center(child: Text("no buses"),),
+            );
+          }
+          else {
+            return Scaffold(
       appBar: AppBar(
         title: const Text('Driver Home Page'),
         actions: [
@@ -92,6 +172,11 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
               child: Text('No planned trips for the driver.'),
             ),
     );
+          }
+        }
+      },
+    );
+    
   }
 }
 
@@ -107,4 +192,17 @@ class Voyage {
     required this.fromStation,
     required this.toStation,
   });
+}
+class Bus{
+  bool disponible;
+  String driverId;
+  String nom;
+  
+
+  Bus({
+    required this.disponible,
+    required this.driverId,
+    required this.nom,
+});
+
 }

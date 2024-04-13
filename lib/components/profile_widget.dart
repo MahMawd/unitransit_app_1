@@ -26,7 +26,20 @@ class GetProfile extends StatelessWidget {
 
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-          return Column(children: [
+          if(collectionName=='chauffeur'){
+            return Column(children: [
+            const SizedBox(height: 30),
+              const Divider(),
+              const SizedBox(height: 10),
+              ProfileMenuWidget(title:"Username" ,subtitle: '${data['username']}',icon:Icons.account_box ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"Email" ,subtitle: '${data['email']}',icon:Icons.email ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"Password" ,subtitle: '${data['password']}',icon:Icons.fingerprint ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              const Divider(),
+              const SizedBox(height: 10),
+              ProfileMenuWidget(title:"ID" ,subtitle: '${data['ID']}',icon:Icons.edit ,onPress: (){},endIcon: false,textColor: Colors.black,),
+          ],);
+          }else {
+            return Column(children: [
             const SizedBox(height: 30),
               const Divider(),
               const SizedBox(height: 10),
@@ -37,6 +50,8 @@ class GetProfile extends StatelessWidget {
               const SizedBox(height: 10),
               ProfileMenuWidget(title:"CIN" ,subtitle: '${data['CIN']}',icon:Icons.edit ,onPress: (){},endIcon: false,textColor: Colors.black,),
           ],);
+          }
+          
         }
         return const Column(
           children: [

@@ -221,7 +221,6 @@ class _HomePageState extends State<HomePage> {
           
             Container(
                   padding: const EdgeInsets.all(25),
-                  height: MediaQuery.of(context).size.height * 0.6,
                   color: Colors.grey[100],
                   child: Center(
                     child: Column(
@@ -241,10 +240,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 20),
                         voyage.isNotEmpty
-                        ? ListView.builder(
-                          //padding: const EdgeInsets.only(bottom: 20.0),
+                        ? ListView.separated(
                             shrinkWrap: true,
                             itemCount: voyage.length,
+                            separatorBuilder:(context,index){
+                              return const SizedBox(height: 10,);
+                            },
                             itemBuilder: (BuildContext context, int index) {
                               Voyage currentVoyage = voyage[index];
                               return Container(

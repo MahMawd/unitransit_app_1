@@ -22,10 +22,12 @@ class ProfileScreen extends StatelessWidget{
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-               const SizedBox(
+              SizedBox(
                   width: 120,
                   height: 120,
                   child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: const Image(image: AssetImage('lib/images/taha.png'),fit: BoxFit.cover,),
                   ),
                 ),
                 const SizedBox(height:10),
