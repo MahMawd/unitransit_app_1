@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Bus extends StatelessWidget{
-  const Bus({super.key});
+class BusWidget extends StatelessWidget{
+  final ListTile test;
+  const BusWidget({
+    required this.test,
+    super.key
+
+    });
   @override
   Widget build(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
+    return Container(
           height: 70,
           width: 370,
           //color: Colors.black,
@@ -25,8 +28,10 @@ class Bus extends StatelessWidget{
                 ),
               ),
               const SizedBox(width: 7.0,),
-              const Text("38B",style: TextStyle(fontSize: 24,),),
-              const SizedBox(width: 180.0,),
+              SizedBox(
+                width: 240,
+                child: test),
+              //const SizedBox(width: 180.0,),
               TextButton(
                 style: TextButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -35,27 +40,9 @@ class Bus extends StatelessWidget{
                 onPressed: () {},
                 child:const Text("Start"),
                ),
-              /*const Icon(
-                Icons.gps_fixed,
-                color: Colors.white,
-              ),
-              const Text("demarrer",style: TextStyle(color: Colors.white),),
-              //SizedBox(width: 50.0,),
-              const Column(
-                children: [
-                  SizedBox(height: 20.0,),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 45.0)),
-                  Text(".......",style: TextStyle(color: Colors.white,fontSize: 40.0)),
-                ],
-              ),
-              const Icon(
-                Icons.gps_fixed,
-                color: Colors.white,
-              ),
-              const Text("destination",style: TextStyle(color: Colors.white),),*/
+
             ] 
           )
-        ),
-    );
+        );
   }
 }

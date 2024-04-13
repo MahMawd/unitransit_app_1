@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:unitransit_app_1/components/bus.dart';
 
 class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
@@ -106,37 +107,51 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
+    return Scaffold(
+    appBar: AppBar(
+      title: const Text('Main Page'),
+    ),
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Add your widgets here to decorate the space above the list view
+        // For example:
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: const Text(
+            'Welcome to the main page!',
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+    
+    FutureBuilder<String>(
       future: driverState, 
       builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
         if(snapshot.connectionState==ConnectionState.waiting){
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         else if(snapshot.hasError){
-          return Text('Error ${snapshot.error}');
+          return Center(child: Text('Error ${snapshot.error}'));
         }
         else {
           String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
           print(driverStateValue);
           if(driverStateValue == 'not_driving'){
-            return Scaffold(
-              body: availableBus.isNotEmpty ?
-              ListView.builder(
+            return availableBus.isNotEmpty ?
+              ListView.separated(
+                separatorBuilder:(context,index){return const SizedBox(height: 10,);},
                 itemCount: availableBus.length,
                 itemBuilder: (context, index) {
                   Bus aBus = availableBus[index];
-                  return Container(
-                    height: 70,
-                    width: 370,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),color: Colors.grey.shade300,),
-                    child: ListTile(
-                      title: Text('Name: ${aBus.nom}'),
+                  return BusWidget(
+                    test:ListTile(
+                      title: Text('Bus name: ${aBus.nom}'),
+                      subtitle:const Text("Disponible"),
                       ),
-                  );
+                      );
                   },
               ):
-        const Center(child: Text("no buses"),),
-            );
+        const Center(child: Text("no buses"),);
           }
           else {
             return Scaffold(
@@ -175,8 +190,10 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           }
         }
       },
-    );
-    
+    )
+    ]
+  ),
+  );
   }
 }
 
