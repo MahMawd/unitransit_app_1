@@ -65,7 +65,14 @@ class _AuthentificationState extends State<Authentification> {
     debugPrint('Failed to sign in: $e');
   }
 }
-
+Future<void> _resetPassword() async {
+    try {
+      await auth.sendPasswordResetEmail(email: emailController.text);
+      showToast(message: 'Password reset email sent. Check your email inbox.');
+    } catch (e) {
+      showToast(message: 'Failed to send password reset email: $e');
+    }
+  }
 void _handleEtudiantSignIn() {
   // Navigate to MainPage for 'etudiant' users
   Navigator.pushReplacement(
@@ -143,6 +150,11 @@ Future<String> _getUserType(String uid) async {
               Boutton(
                 onTap:()=>_signIn(),
                 text: "Sign in",
+              ),
+              const SizedBox(height: 30.0),
+              Boutton(
+                onTap:()=>_resetPassword(),
+                text: "reset password",
               ),
               const SizedBox(height: 30.0),
               Boutton(
