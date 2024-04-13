@@ -107,7 +107,15 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   @override
   Widget build(BuildContext context) {
-    return 
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Driver Home Page'),
+        
+        actions: [
+        ],
+      ),
+      body: 
     FutureBuilder<String>(
       future: driverState, 
       builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
@@ -142,17 +150,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       appBar: AppBar(
         title: const Text('Driver Home Page'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () async {
-              try {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/auth');
-              } catch (e) {
-                debugPrint('Failed to sign out: $e');
-              }
-            },
-          ),
         ],
       ),
       body: plannedTrips.isNotEmpty
@@ -174,7 +171,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           }
         }
       },
-    );
+    ),);
   }
 }
 
