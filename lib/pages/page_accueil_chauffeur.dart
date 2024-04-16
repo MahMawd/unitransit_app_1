@@ -1,9 +1,10 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/bus_widget.dart';
+import 'package:unitransit_app_1/models/voyage.dart';
+
+import '../models/bus.dart';
 
 class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
@@ -13,30 +14,32 @@ class MainPageChauffeur extends StatefulWidget {
 }
 
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
-  late String driverId; // Id of the current driver
-  List<Voyage> plannedTrips = []; // List to hold planned trips
-  List<Bus> availableBus=[];
+  late String driverId;
+  List<Voyage> plannedTrips = [];
+  List<Bus> availableSectors=[];
+  
   late Future<String> driverState;
   @override
   void initState() {
     super.initState();
-    // Fetch the driver's ID once the widget initializes
+    
     fetchDriverId();
     driverState = checkIsDriverDrivingBus();
     fetchAvailableBuses();
   }
 
   Future<void> fetchDriverId() async {
-    // Fetch the current user's ID (assuming driver ID is stored in Firebase Auth)
+    
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       setState(() {
         driverId = user.uid;
       });
-      // Once we have the driver's ID, fetch their planned trips
       await fetchPlannedTrips();
     }
   }
+
+  
   Future<void> fetchAvailableBuses() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -46,15 +49,16 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           .get();
           if(querySnapshot.docs.isNotEmpty){
             setState(() {
-              availableBus = querySnapshot.docs.map((doc){
+              availableSectors = querySnapshot.docs.map((doc){
                 return Bus(
+                busId: doc.id,
                 disponible: doc['disponible'],
                 driverId: doc['driverId'],
                 nom: doc['nom'],
                 );
               }).toList();
             });
-            print(availableBus);
+            print(availableSectors);
           }else{
             debugPrint('no buses available');
           }
@@ -129,16 +133,19 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
           print(driverStateValue);
           if(driverStateValue == 'not_driving'){
-            return availableBus.isNotEmpty ?
+            return availableSectors.isNotEmpty ?
               ListView.separated(
                 separatorBuilder:(context,index){return const SizedBox(height: 10,);},
-                itemCount: availableBus.length,
+                itemCount: availableSectors.length,
                 itemBuilder: (context, index) {
-                  Bus aBus = availableBus[index];
+                  Bus aSector = availableSectors[index];
+                  //fetchTimes(aSector.busId);
                   return BusWidget(
+                    //busTimeList: availableBusTimes,
+                    busId: aSector.busId,
                     test:ListTile(
-                      title: Text('Bus name: ${aBus.nom}'),
-                      subtitle:const Text("Disponible"),
+                      title: Text('Sector: ${aSector.nom}'),
+                      subtitle:Text("Disponible \nId: ${aSector.busId}"),
                       ),
                       );
                   },
@@ -173,31 +180,4 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       },
     ),);
   }
-}
-
-class Voyage {
-  final String departureTime;
-  final String arrivalTime;
-  final String fromStation;
-  final String toStation;
-
-  Voyage({
-    required this.departureTime,
-    required this.arrivalTime,
-    required this.fromStation,
-    required this.toStation,
-  });
-}
-class Bus{
-  bool disponible;
-  String driverId;
-  String nom;
-  
-
-  Bus({
-    required this.disponible,
-    required this.driverId,
-    required this.nom,
-});
-
 }

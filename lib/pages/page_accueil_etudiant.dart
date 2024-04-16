@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:unitransit_app_1/models/voyage.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage({super.key});
@@ -10,7 +11,7 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4'];
+  //List<String> stations = ['Campus Manar', 'El Menzah', 'Station 3', 'Station 4'];
   List<String> stationName =[];
   
     String selectedStationFrom = '0';
@@ -318,17 +319,4 @@ Future<void> fetchStationNames() async {
       debugPrint("Error fetching station names: $e");
     }
   }
-}
-class Voyage {
-  final String departureTime;
-  final String arrivalTime;
-  final String fromStation;
-  final String toStation;
-
-  Voyage({
-    required this.departureTime,
-    required this.arrivalTime,
-    required this.fromStation,
-    required this.toStation,
-  });
 }

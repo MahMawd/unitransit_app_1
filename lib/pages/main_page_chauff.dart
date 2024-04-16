@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:unitransit_app_1/pages/notification_etudiant.dart';
 import 'package:unitransit_app_1/pages/page_accueil_chauffeur.dart';
 import 'package:unitransit_app_1/pages/profile_chauffeur.dart';
 
@@ -13,7 +12,6 @@ class _HomePageChauffeur extends State<HomePageChauffeur>{
   List<Widget> pages=[
     const MainPageChauffeur(),
     ProfileScreenChauffeur(),
-    const NotificationView(),
   ];
   @override
   Widget build(BuildContext context){
@@ -32,9 +30,6 @@ class _HomePageChauffeur extends State<HomePageChauffeur>{
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person),
           label: "Profil"
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications),
-          label: "Notifications"
           ),
         ]
       ),
