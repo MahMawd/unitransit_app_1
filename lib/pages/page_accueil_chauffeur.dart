@@ -98,6 +98,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
               arrivalTime: doc['arrivaltime'],
               fromStation: doc['fromStation'],
               toStation: doc['ToStation'],
+              busId: doc['busId'],
             );
           }).toList();
         });
@@ -145,7 +146,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                     busId: aSector.busId,
                     test:ListTile(
                       title: Text('Sector: ${aSector.nom}'),
-                      subtitle:Text("Disponible \nId: ${aSector.busId}"),
+                      subtitle:const Text("Disponible"),
                       ),
                       );
                   },

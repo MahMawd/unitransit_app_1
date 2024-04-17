@@ -34,6 +34,7 @@ class _BusWidgetState extends State<BusWidget> {
               arrivalTime: doc['arrivaltime'],
               fromStation: doc['fromStation'],
               toStation: doc['ToStation'],
+              busId: doc['busId'],
                 );
               }).toList();
             });
@@ -67,7 +68,7 @@ class _BusWidgetState extends State<BusWidget> {
               ),
               const SizedBox(width: 7.0,),
               SizedBox(
-                width: 240,
+                width: 220,
                 child: widget.test),
               //const SizedBox(width: 180.0,),
               TextButton(
@@ -86,7 +87,7 @@ class _BusWidgetState extends State<BusWidget> {
                   //   print('departure: ${v.departureTime} arrival:${v.arrivalTime} from: ${v.fromStation} to: ${v.toStation}');
                   // }
                 },
-                child:const Text("Embark"),
+                child:const Text("Choose route"),
                ),
 
             ] 

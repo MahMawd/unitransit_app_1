@@ -293,6 +293,7 @@ class _HomePageState extends State<HomePage> {
             arrivalTime: doc['arrivaltime'],
             fromStation: doc['fromStation'],
             toStation: doc['ToStation'],
+            busId: doc['busId'],
           );
         }).toList();
       });
