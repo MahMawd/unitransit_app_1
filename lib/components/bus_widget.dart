@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:unitransit_app_1/pages/page_voyages.dart';
 
 import '../models/voyage.dart';
 
@@ -76,10 +77,14 @@ class _BusWidgetState extends State<BusWidget> {
                 ),
                 onPressed: ()async {
                   fetchTimes(widget.busId);
-                   await Future.delayed(Duration(seconds: 1));
-                  for(Voyage v in availableBusTimes){
-                    print('departure: ${v.departureTime} from: ${v.fromStation} to: ${v.toStation}');
-                  }
+                   await Future.delayed(const Duration(seconds: 1));
+                   Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>PageVoyages(voyages: availableBusTimes,)), // Navigate to SignUp page
+            );
+                  // for(Voyage v in availableBusTimes){
+                  //   print('departure: ${v.departureTime} arrival:${v.arrivalTime} from: ${v.fromStation} to: ${v.toStation}');
+                  // }
                 },
                 child:const Text("Embark"),
                ),
