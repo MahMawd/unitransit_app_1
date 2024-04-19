@@ -11,6 +11,7 @@ class MainPageChauffeur extends StatefulWidget {
   State<MainPageChauffeur> createState() => _MainPageChauffeurState();
 }
 
+
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
   late String driverId; // Id of the current driver
   List<Voyage> plannedTrips = []; // List to hold planned trips
