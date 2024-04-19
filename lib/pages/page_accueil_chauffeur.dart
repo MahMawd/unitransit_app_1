@@ -1,8 +1,11 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:unitransit_app_1/components/bus_widget.dart';
+import 'package:unitransit_app_1/models/voyage.dart';
+import 'package:unitransit_app_1/pages/page_voyages.dart';
+
+import '../models/bus.dart';
 
 class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
@@ -13,30 +16,51 @@ class MainPageChauffeur extends StatefulWidget {
 
 
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
-  late String driverId; // Id of the current driver
-  List<Voyage> plannedTrips = []; // List to hold planned trips
-  List<Bus> availableBus=[];
+  late String driverId;
+  late String currentBusId;
+  List<Voyage> plannedTrips = [];
+  List<Bus> availableSectors=[];
+  //late String driverStateV;
   late Future<String> driverState;
   @override
   void initState() {
     super.initState();
-    // Fetch the driver's ID once the widget initializes
     fetchDriverId();
     driverState = checkIsDriverDrivingBus();
+    handleDriverState();
     fetchAvailableBuses();
   }
 
   Future<void> fetchDriverId() async {
-    // Fetch the current user's ID (assuming driver ID is stored in Firebase Auth)
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      setState(() {
-        driverId = user.uid;
-      });
-      // Once we have the driver's ID, fetch their planned trips
-      await fetchPlannedTrips();
+      driverId = user.uid;
+      //await fetchPlannedTrips();
     }
   }
+  Future<void> fetchDriversBusId() async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      .collection('chauffeur').doc(driverId).get();
+
+      if(documentSnapshot.exists){
+
+          currentBusId=documentSnapshot['busId'];
+
+      }
+    }catch(e){
+      print('error occured fetching drivers current bus id $e');
+    }
+  }
+
+  Future<void> handleDriverState() async {
+    String driverStateV = await driverState;
+    if(driverStateV=='driving'){
+      await fetchDriversBusId();
+      fetchPlannedTrips(currentBusId);
+    }
+  }
+
   Future<void> fetchAvailableBuses() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -46,15 +70,17 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           .get();
           if(querySnapshot.docs.isNotEmpty){
             setState(() {
-              availableBus = querySnapshot.docs.map((doc){
+              availableSectors = querySnapshot.docs.map((doc){
                 return Bus(
+                busId: doc.id,
                 disponible: doc['disponible'],
                 driverId: doc['driverId'],
                 nom: doc['nom'],
                 );
               }).toList();
             });
-            print(availableBus);
+            print('Sectors:');
+            print(availableSectors);
           }else{
             debugPrint('no buses available');
           }
@@ -71,20 +97,24 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       if(documentSnapshot.exists && documentSnapshot['busId']==''){
         print('driver not driving');
         return 'not_driving';
-      }else {
+      }else if(documentSnapshot.exists && documentSnapshot['busId']!=''){
         print('driver driving');
         return 'driving';
+      }
+      else {
+        print('unknown error in checkIsDriverDrivingBus');
+        return 'unkown error';
       }
     }catch(e){
       print('Error checking is driver driving bus: $e');
       return 'error occured';
     }
   }
-  Future<void> fetchPlannedTrips() async {
+  Future<void> fetchPlannedTrips(String driverBusId) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('voyage')
-          .where('driverId', isEqualTo: driverId)
+          .where('busId', isEqualTo: driverBusId)
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
@@ -94,6 +124,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
               arrivalTime: doc['arrivaltime'],
               fromStation: doc['fromStation'],
               toStation: doc['ToStation'],
+              busId: doc['busId'],
             );
           }).toList();
         });
@@ -107,54 +138,61 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Driver Home Page'),
+        
+        actions: [
+        ],
+      ),
+      body: 
+    FutureBuilder<String>(
       future: driverState, 
       builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
         if(snapshot.connectionState==ConnectionState.waiting){
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         else if(snapshot.hasError){
-          return Text('Error ${snapshot.error}');
+          return Center(child: Text('Error ${snapshot.error}'));
         }
         else {
-          String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
-          print(driverStateValue);
+          final driverStateValue = snapshot.data;
+          //String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
+          //print(driverStateV);
           if(driverStateValue == 'not_driving'){
-            return Scaffold(
-              body: availableBus.isNotEmpty ?
-              ListView.builder(
-                itemCount: availableBus.length,
+            return availableSectors.isNotEmpty ?
+              ListView.separated(
+                separatorBuilder:(context,index){return const SizedBox(height: 10,);},
+                itemCount: availableSectors.length,
                 itemBuilder: (context, index) {
-                  Bus aBus = availableBus[index];
-                  return Container(
-                    height: 70,
-                    width: 370,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),color: Colors.grey.shade300,),
-                    child: ListTile(
-                      title: Text('Name: ${aBus.nom}'),
+                  Bus aSector = availableSectors[index];
+                  //fetchTimes(aSector.busId);
+                  return BusWidget(
+                    //busTimeList: availableBusTimes,
+                    busId: aSector.busId,
+                    test:ListTile(
+                      title: Text('Sector: ${aSector.nom}'),
+                      subtitle:const Text("Disponible"),
                       ),
-                  );
+                      );
                   },
               ):
-        const Center(child: Text("no buses"),),
-            );
+        const Center(child: Text("no buses"),);
+          }
+          else if(driverStateValue=='driving'){
+            //fetchDriversBusId();
+            print('ana fel if');
+            //fetchDriversBusId();
+            //fetchPlannedTrips(currentBusId); //late currentbusid exception
+            return PageVoyages(voyages: plannedTrips);
           }
           else {
+            print('ana fel else');
             return Scaffold(
       appBar: AppBar(
-        title: const Text('Driver Home Page'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () async {
-              try {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/auth');
-              } catch (e) {
-                debugPrint('Failed to sign out: $e');
-              }
-            },
-          ),
+        title: const Text('Driver Home Page: error occured'),
+        actions: const [
         ],
       ),
       body: plannedTrips.isNotEmpty
@@ -176,34 +214,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           }
         }
       },
+    ),
     );
-    
   }
-}
-
-class Voyage {
-  final String departureTime;
-  final String arrivalTime;
-  final String fromStation;
-  final String toStation;
-
-  Voyage({
-    required this.departureTime,
-    required this.arrivalTime,
-    required this.fromStation,
-    required this.toStation,
-  });
-}
-class Bus{
-  bool disponible;
-  String driverId;
-  String nom;
-  
-
-  Bus({
-    required this.disponible,
-    required this.driverId,
-    required this.nom,
-});
-
 }

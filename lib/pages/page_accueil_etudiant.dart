@@ -377,7 +377,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchStationNames() async {
     try {
       QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('station').get();
+      await FirebaseFirestore.instance.collection('station').get();
 
       setState(() {
         stationName =
