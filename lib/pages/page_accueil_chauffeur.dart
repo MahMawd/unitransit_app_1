@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/bus_widget.dart';
 import 'package:unitransit_app_1/models/voyage.dart';
+import 'package:unitransit_app_1/pages/page_voyages.dart';
 
 import '../models/bus.dart';
 
@@ -15,31 +16,50 @@ class MainPageChauffeur extends StatefulWidget {
 
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
   late String driverId;
+  late String currentBusId;
   List<Voyage> plannedTrips = [];
   List<Bus> availableSectors=[];
-  
+  //late String driverStateV;
   late Future<String> driverState;
   @override
   void initState() {
     super.initState();
-    
     fetchDriverId();
     driverState = checkIsDriverDrivingBus();
+    handleDriverState();
     fetchAvailableBuses();
   }
 
   Future<void> fetchDriverId() async {
-    
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      setState(() {
-        driverId = user.uid;
-      });
-      await fetchPlannedTrips();
+      driverId = user.uid;
+      //await fetchPlannedTrips();
+    }
+  }
+  Future<void> fetchDriversBusId() async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      .collection('chauffeur').doc(driverId).get();
+
+      if(documentSnapshot.exists){
+
+          currentBusId=documentSnapshot['busId'];
+
+      }
+    }catch(e){
+      print('error occured fetching drivers current bus id $e');
     }
   }
 
-  
+  Future<void> handleDriverState() async {
+    String driverStateV = await driverState;
+    if(driverStateV=='driving'){
+      await fetchDriversBusId();
+      fetchPlannedTrips(currentBusId);
+    }
+  }
+
   Future<void> fetchAvailableBuses() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -58,6 +78,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                 );
               }).toList();
             });
+            print('Sectors:');
             print(availableSectors);
           }else{
             debugPrint('no buses available');
@@ -75,20 +96,24 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       if(documentSnapshot.exists && documentSnapshot['busId']==''){
         print('driver not driving');
         return 'not_driving';
-      }else {
+      }else if(documentSnapshot.exists && documentSnapshot['busId']!=''){
         print('driver driving');
         return 'driving';
+      }
+      else {
+        print('unknown error in checkIsDriverDrivingBus');
+        return 'unkown error';
       }
     }catch(e){
       print('Error checking is driver driving bus: $e');
       return 'error occured';
     }
   }
-  Future<void> fetchPlannedTrips() async {
+  Future<void> fetchPlannedTrips(String driverBusId) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('voyage')
-          .where('driverId', isEqualTo: driverId)
+          .where('busId', isEqualTo: driverBusId)
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
@@ -131,8 +156,9 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           return Center(child: Text('Error ${snapshot.error}'));
         }
         else {
-          String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
-          print(driverStateValue);
+          final driverStateValue = snapshot.data;
+          //String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
+          //print(driverStateV);
           if(driverStateValue == 'not_driving'){
             return availableSectors.isNotEmpty ?
               ListView.separated(
@@ -153,11 +179,19 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
               ):
         const Center(child: Text("no buses"),);
           }
+          else if(driverStateValue=='driving'){
+            //fetchDriversBusId();
+            print('ana fel if');
+            //fetchDriversBusId();
+            //fetchPlannedTrips(currentBusId); //late currentbusid exception
+            return PageVoyages(voyages: plannedTrips);
+          }
           else {
+            print('ana fel else');
             return Scaffold(
       appBar: AppBar(
-        title: const Text('Driver Home Page'),
-        actions: [
+        title: const Text('Driver Home Page: error occured'),
+        actions: const [
         ],
       ),
       body: plannedTrips.isNotEmpty
@@ -179,6 +213,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           }
         }
       },
-    ),);
+    ),
+    );
   }
 }

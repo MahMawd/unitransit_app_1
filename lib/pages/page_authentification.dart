@@ -152,11 +152,11 @@ Future<String> _getUserType(String uid) async {
                 text: "Sign in",
               ),
               const SizedBox(height: 30.0),
-              Boutton(
-                onTap:()=>_resetPassword(),
-                text: "reset password",
-              ),
-              const SizedBox(height: 30.0),
+              // Boutton(
+              //   onTap:()=>_resetPassword(),
+              //   text: "reset password",
+              // ),
+              //const SizedBox(height: 30.0),
               Boutton(
                 text: "Create an account",
                 onTap:(){

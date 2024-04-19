@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget{
                   height: 120,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    //child: const Image(image: AssetImage('lib/images/taha.png'),fit: BoxFit.cover,),
+                    child: const Image(image: AssetImage('lib/images/taha.png'),fit: BoxFit.cover,),
                   ),
                 ),
                 const SizedBox(height:10),
