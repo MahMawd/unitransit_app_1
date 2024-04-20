@@ -11,7 +11,6 @@ import '../models/bus.dart';
 
 class MainPageChauffeur extends StatefulWidget {
   const MainPageChauffeur({super.key});
-
   @override
   State<MainPageChauffeur> createState() => _MainPageChauffeurState();
 }
@@ -203,7 +202,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
     }
   }
   
-
   Future<Voyage?> fetchVoyage(String docId,) async {
     print('ahla');
   try {

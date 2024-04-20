@@ -14,7 +14,6 @@ class VoyagesWidget extends StatefulWidget {
     required this.voyage
     });
   final Voyage? voyage;
-
   @override
   State<VoyagesWidget> createState() => _VoyagesWidgetState();
 }
