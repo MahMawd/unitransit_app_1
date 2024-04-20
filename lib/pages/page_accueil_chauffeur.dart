@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitransit_app_1/components/bus_widget.dart';
+import 'package:unitransit_app_1/components/voyages_widget.dart';
 import 'package:unitransit_app_1/models/voyage.dart';
 import 'package:unitransit_app_1/pages/page_voyages.dart';
 
@@ -15,21 +16,26 @@ class MainPageChauffeur extends StatefulWidget {
 }
 
 class _MainPageChauffeurState extends State<MainPageChauffeur> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late String driverId;
   late String currentBusId;
   List<Voyage> plannedTrips = [];
   List<Bus> availableSectors=[];
+  
+  Voyage? voy;
+  late List<String> plannedVoyagesDocs;
   //late String driverStateV;
   late Future<String> driverState;
   @override
   void initState() {
     super.initState();
     fetchDriverId();
-    driverState = checkIsDriverDrivingBus();
-    handleDriverState();
-    fetchAvailableBuses();
+    fetchPlannedVoyagesFromChauffeur();
+    //driverState = checkIsDriverDrivingBus();
+    //handleDriverState();
+    //fetchAvailableBuses();
   }
-
+  
   Future<void> fetchDriverId() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -119,6 +125,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
         setState(() {
           plannedTrips = querySnapshot.docs.map((doc) {
             return Voyage(
+              voyageId: doc.id,
               departureTime: doc['departureTime'],
               arrivalTime: doc['arrivaltime'],
               fromStation: doc['fromStation'],
@@ -134,86 +141,127 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       debugPrint('Error fetching planned trips: $e');
     }
   }
+  bool isLoading = true;
+
+  Future<void> fetchPlannedVoyagesFromChauffeur() async {
+    try{
+      DocumentSnapshot documentSnapshot = await _firestore.collection('chauffeur').doc(driverId).get();
+      await Future.delayed(const Duration(milliseconds: 500));
+      if(documentSnapshot.exists){
+        print("slm");
+        List<dynamic> firestoreArray = documentSnapshot['voyages'];
+        
+        setState(() {
+          plannedVoyagesDocs=firestoreArray.map((element) => element.toString()).toList();
+          isLoading = false;
+        });
+        print(plannedVoyagesDocs);
+      }
+      else{
+        setState(() {
+          plannedVoyagesDocs=[];
+          isLoading = false;
+        });
+        print('document not found');
+      }
+    }
+    catch(e){
+      print("error occured in fetchDriverBusList $e");
+    }
+  }
+
+  Future<Voyage?> fetchVoyage(String docId) async {
+  try {
+    DocumentSnapshot documentSnapshot = await _firestore.collection('voyage').doc(docId).get();
+    if (documentSnapshot.exists) {
+      return Voyage(
+        voyageId: docId,
+        departureTime: documentSnapshot['departureTime'],
+        arrivalTime: documentSnapshot['arrivaltime'],
+        fromStation: documentSnapshot['fromStation'],
+        toStation: documentSnapshot['ToStation'],
+        busId: documentSnapshot['busId'],
+      );
+    } else {
+      return null;
+    }
+  } catch (e) {
+    print('error in fetchVoyage $e');
+    return null;
+  }
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Driver Home Page'),
-        
-        actions: [
-        ],
-      ),
-      body: 
-    FutureBuilder<String>(
-      future: driverState, 
-      builder:(BuildContext context ,AsyncSnapshot<String> snapshot) {
-        if(snapshot.connectionState==ConnectionState.waiting){
-          return const Center(child: CircularProgressIndicator());
-        }
-        else if(snapshot.hasError){
-          return Center(child: Text('Error ${snapshot.error}'));
-        }
-        else {
-          final driverStateValue = snapshot.data;
-          //String driverStateValue = snapshot.data ?? ''; // Get the value of the Future
-          //print(driverStateV);
-          if(driverStateValue == 'not_driving'){
-            return availableSectors.isNotEmpty ?
-              ListView.separated(
-                separatorBuilder:(context,index){return const SizedBox(height: 10,);},
-                itemCount: availableSectors.length,
-                itemBuilder: (context, index) {
-                  Bus aSector = availableSectors[index];
-                  //fetchTimes(aSector.busId);
-                  return BusWidget(
-                    //busTimeList: availableBusTimes,
-                    busId: aSector.busId,
-                    test:ListTile(
-                      title: Text('Sector: ${aSector.nom}'),
-                      subtitle:const Text("Disponible"),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.black,
+      //   //leading: IconButton(onPressed: ()=> Get.to(() =>  VoyagesWidget()), icon: const Icon(Icons.arrow_back,color: Colors.white,)),
+      //   title: Text("Driver Home Page",
+      //   style: Theme.of(context).textTheme.headlineMedium ),
+      //   actions: [
+          
+      //   ],
+      // ),
+      body:
+            SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    alignment: AlignmentDirectional.topStart,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Home Page Driver",
+                          style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,
+                          ),
+                          ),
+                          Text('Welcome ',
+                          style: TextStyle(fontSize: 18),
+                          ),
+                        ],
                       ),
-                      );
-                  },
-              ):
-        const Center(child: Text("no buses"),);
-          }
-          else if(driverStateValue=='driving'){
-            //fetchDriversBusId();
-            print('ana fel if');
-            //fetchDriversBusId();
-            //fetchPlannedTrips(currentBusId); //late currentbusid exception
-            return PageVoyages(voyages: plannedTrips);
-          }
-          else {
-            print('ana fel else');
-            return Scaffold(
-      appBar: AppBar(
-        title: const Text('Driver Home Page: error occured'),
-        actions: const [
-        ],
-      ),
-      body: plannedTrips.isNotEmpty
-          ? ListView.builder(
-              itemCount: plannedTrips.length,
-              itemBuilder: (BuildContext context, int index) {
-                Voyage currentVoyage = plannedTrips[index];
-                return ListTile(
-                  title: Text('Departure: ${currentVoyage.departureTime}'),
-                  subtitle: Text(
-                      'From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation}'),
-                );
-              },
-            )
-          : const Center(
-              child: Text('No planned trips for the driver.'),
+                    ),
+                  ),
+                  !isLoading ?
+                  plannedVoyagesDocs.isNotEmpty ?
+                  Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 10,);
+                      },
+                      itemCount: plannedVoyagesDocs.length,
+                      itemBuilder:(context, index){
+                        String voyageId = plannedVoyagesDocs[index];
+                        return 
+                        FutureBuilder(
+                          future: fetchVoyage(voyageId), 
+                          builder:(BuildContext context, AsyncSnapshot<Voyage?> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData || snapshot.data == null) {
+                              return Container();
+                            } else {
+                              return VoyagesWidget(voyage: snapshot.data!);
+                            }
+                          },);
+                      },
+                      
+                      ),
+                  )
+                    : SizedBox(height:500, child: const Center(child: Text("No planned trips contact administration")))
+                     : const Center(child: CircularProgressIndicator()),
+                ],
+              ),
             ),
-    );
-          }
-        }
-      },
-    ),
+              
+
+
+  
     );
   }
 }

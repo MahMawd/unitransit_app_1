@@ -289,6 +289,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         voyage = querySnapshot.docs.map((doc) {
           return Voyage(
+            voyageId: doc.id,
             departureTime: doc['departureTime'],
             arrivalTime: doc['arrivaltime'],
             fromStation: doc['fromStation'],

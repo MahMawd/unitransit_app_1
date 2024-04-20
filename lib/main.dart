@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:unitransit_app_1/pages/page_alert.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class UniTransitApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: Authentification(),
     );

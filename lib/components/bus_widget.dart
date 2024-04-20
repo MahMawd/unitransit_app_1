@@ -30,6 +30,7 @@ class _BusWidgetState extends State<BusWidget> {
             setState(() {
               availableBusTimes = querySnapshot.docs.map((doc){
                 return Voyage(
+                  voyageId: doc.id,
               departureTime: doc['departureTime'],
               arrivalTime: doc['arrivaltime'],
               fromStation: doc['fromStation'],

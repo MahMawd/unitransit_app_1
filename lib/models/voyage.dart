@@ -1,4 +1,5 @@
 class Voyage {
+  final String voyageId;
   final String departureTime;
   final String arrivalTime;
   final String fromStation;
@@ -6,6 +7,7 @@ class Voyage {
   final String busId;
 
   Voyage({
+    required this.voyageId,
     required this.departureTime,
     required this.arrivalTime,
     required this.fromStation,
