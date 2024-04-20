@@ -74,7 +74,8 @@ class ProfileScreen extends StatelessWidget{
                     debugPrint('Failed to sign out: $e');
                   }
                 },
-                child: const Text('Sign Out'),
+                child: const Text('Sign Out',style: TextStyle(color: Colors.red,),),
+                
               ),
               ],
             ),
@@ -84,3 +85,5 @@ class ProfileScreen extends StatelessWidget{
     );
   }
 }
+
+
