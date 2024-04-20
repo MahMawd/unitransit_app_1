@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+//import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../models/voyage.dart';
 //import 'package:unitransit/driver.dart';
@@ -23,7 +24,10 @@ class _AddAlertState extends State<AddAlert> {
     arrivalTime: '10:00', 
     fromStation: 'Campus Manar', 
     toStation: 'Oued El Lil', 
-    busId: 'busId');
+    busId: 'busId',
+    fromStationLatLng:const  LatLng(8.0, 9.0),
+    toStationLatLng: const LatLng(9.0, 8.0),
+        );
     Set<String> _selected={'Late'};
 
     void updateSelected(Set<String> newSelection){

@@ -1,3 +1,5 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class Voyage {
   final String voyageId;
   final String departureTime;
@@ -5,6 +7,8 @@ class Voyage {
   final String fromStation;
   final String toStation;
   final String busId;
+  final LatLng fromStationLatLng;
+  final LatLng toStationLatLng;
 
   Voyage({
     required this.voyageId,
@@ -13,4 +17,6 @@ class Voyage {
     required this.fromStation,
     required this.toStation,
     required this.busId,
+    required this.fromStationLatLng,
+    required this.toStationLatLng,
   });}

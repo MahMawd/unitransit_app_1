@@ -63,11 +63,12 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
       print("error finishing voyage");
     }
   }
-  void updateUI(){
-   setState(() {
-      //You can also make changes to your state here.
-    });
-  }
+  
+  // void updateUI(){
+  //  setState(() {
+  //     //You can also make changes to your state here.
+  //   });
+  // }
 
   Future<void> handleStart(String voyId) async {
     try {
@@ -124,9 +125,9 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
             direction: Axis.vertical,
                 children: [
               Text('Departure: ${widget.voyage?.departureTime}'),
-              Text('\n From:${widget.voyage?.fromStation}'),
-              Text('\n To:${widget.voyage?.toStation}'),
-              //Text('\n Voyage id: ${widget.voyage?.voyageId}'),
+              Text('\n From:${widget.voyage?.fromStation}\n coords: ${widget.voyage?.fromStationLatLng}'),
+              Text('\n To:${widget.voyage?.toStation}\n coords: ${widget.voyage?.toStationLatLng}'),
+              Text('\n Voyage id: ${widget.voyage?.voyageId}'),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
@@ -141,6 +142,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                     //updateBusIdForDriver(widget.voyage!.busId);
                     //updateDriverIdforBus(driverId,widget.voyage!.busId);
                     //Navigator.push(context,MaterialPageRoute(builder: (context) => const HomePageChauffeur()),);
+                    
                 },),
               const SizedBox(width:25.0),
                   ElevatedButton(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:unitransit_app_1/components/bus_widget.dart';
 import 'package:unitransit_app_1/components/voyages_widget.dart';
 import 'package:unitransit_app_1/models/voyage.dart';
@@ -22,7 +23,8 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
   late String currentBusId;
   List<Voyage> plannedTrips = [];
   List<Bus> availableSectors=[];
-  
+ 
+
   Voyage? voy;
   late List<String> plannedVoyagesDocs;
   //late String driverStateV;
@@ -116,32 +118,62 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       return 'error occured';
     }
   }
-  Future<void> fetchPlannedTrips(String driverBusId) async {
+  Future<LatLngPair> fetchStationCoords(String stationFrom, String stationTo) async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('voyage')
-          .where('busId', isEqualTo: driverBusId)
+      QuerySnapshot fromSnapshot = await FirebaseFirestore.instance
+          .collection('station')
+          .where('nom', isEqualTo: stationFrom)
           .get();
-      if (querySnapshot.docs.isNotEmpty) {
-        setState(() {
-          plannedTrips = querySnapshot.docs.map((doc) {
-            return Voyage(
-              voyageId: doc.id,
-              departureTime: doc['departureTime'],
-              arrivalTime: doc['arrivaltime'],
-              fromStation: doc['fromStation'],
-              toStation: doc['ToStation'],
-              busId: doc['busId'],
-            );
-          }).toList();
-        });
-      } else {
-        debugPrint('No planned trips found for the driver.');
+      QuerySnapshot toSnapshot = await FirebaseFirestore.instance
+          .collection('station')
+          .where('nom', isEqualTo: stationTo)
+          .get();
+
+      LatLng fromLatLng = LatLng(0.0, 0.0);
+      LatLng toLatLng = LatLng(0.0, 0.0);
+
+      if (fromSnapshot.docs.isNotEmpty && toSnapshot.docs.isNotEmpty) {
+        DocumentSnapshot fromDoc = fromSnapshot.docs.first;
+        DocumentSnapshot toDoc = toSnapshot.docs.first;
+
+        fromLatLng = LatLng(fromDoc['lat'] as double, fromDoc['lng'] as double);
+        toLatLng = LatLng(toDoc['lat'] as double, toDoc['lng'] as double);
       }
+
+      return LatLngPair(fromLatLng, toLatLng);
     } catch (e) {
-      debugPrint('Error fetching planned trips: $e');
+        debugPrint('Error fetching station coordinates: $e');
+        return LatLngPair(LatLng(0.0, 0.0), LatLng(0.0, 0.0));
+      }
     }
+  Future<void> fetchPlannedTrips(String driverBusId) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('voyage')
+        .where('busId', isEqualTo: driverBusId)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        LatLngPair stationCoords = await fetchStationCoords(doc['fromStation'], doc['ToStation']);
+        plannedTrips.add(Voyage(
+          voyageId: doc.id,
+          departureTime: doc['departureTime'],
+          arrivalTime: doc['arrivaltime'],
+          fromStation: doc['fromStation'],
+          toStation: doc['ToStation'],
+          busId: doc['busId'],
+          fromStationLatLng: stationCoords.first,
+          toStationLatLng: stationCoords.second,
+        ));
+      }
+      setState(() {});
+    } else {
+      debugPrint('No planned trips found for the driver.');
+    }
+  } catch (e) {
+    debugPrint('Error fetching planned trips: $e');
   }
+}
   bool isLoading = true;
 
   Future<void> fetchPlannedVoyagesFromChauffeur() async {
@@ -170,11 +202,15 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       print("error occured in fetchDriverBusList $e");
     }
   }
+  
 
-  Future<Voyage?> fetchVoyage(String docId) async {
+  Future<Voyage?> fetchVoyage(String docId,) async {
+    print('ahla');
   try {
     DocumentSnapshot documentSnapshot = await _firestore.collection('voyage').doc(docId).get();
     if (documentSnapshot.exists) {
+      print(documentSnapshot['fromStation']);
+      LatLngPair coords=await fetchStationCoords(documentSnapshot['fromStation'], documentSnapshot['ToStation']);
       return Voyage(
         voyageId: docId,
         departureTime: documentSnapshot['departureTime'],
@@ -182,6 +218,8 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
         fromStation: documentSnapshot['fromStation'],
         toStation: documentSnapshot['ToStation'],
         busId: documentSnapshot['busId'],
+        fromStationLatLng: coords.first,
+        toStationLatLng: coords.second,
       );
     } else {
       return null;
@@ -236,6 +274,9 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                       itemCount: plannedVoyagesDocs.length,
                       itemBuilder:(context, index){
                         String voyageId = plannedVoyagesDocs[index];
+                        print(voyageId);
+                        //LatLng fromS=new LatLng(0.0, 0.0);LatLng toS=new LatLng(0.0, 0.0);
+                        print("9bal future builder");
                         return 
                         FutureBuilder(
                           future: fetchVoyage(voyageId), 
@@ -254,7 +295,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                       
                       ),
                   )
-                    : SizedBox(height:500, child: const Center(child: Text("No planned trips contact administration")))
+                    : const SizedBox(height:500, child: Center(child: Text("No planned trips contact administration")))
                      : const Center(child: CircularProgressIndicator()),
                 ],
               ),
@@ -265,4 +306,10 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
   
     );
   }
+}
+class LatLngPair {
+  final LatLng first;
+  final LatLng second;
+
+  LatLngPair(this.first, this.second);
 }
