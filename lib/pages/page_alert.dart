@@ -7,9 +7,11 @@ import '../models/voyage.dart';
 //import 'package:unitransit/driver.dart';
 
 class AddAlert extends StatefulWidget{
-  
-  AddAlert({
+  final Voyage? voyage;
+
+  const AddAlert({
     super.key,
+    required this.voyage,
     });
 
   @override
@@ -18,26 +20,29 @@ class AddAlert extends StatefulWidget{
 
 class _AddAlertState extends State<AddAlert> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final Voyage voyage= Voyage(
-    voyageId: 'voyageId', 
-    departureTime: '8:00', 
-    arrivalTime: '10:00', 
-    fromStation: 'Campus Manar', 
-    toStation: 'Oued El Lil', 
-    busId: 'busId',
-    fromStationLatLng:const  LatLng(8.0, 9.0),
-    toStationLatLng: const LatLng(9.0, 8.0),
-        );
+  String busName='';
+  void initstate(){
+    fetchBusName(widget.voyage?.busId);
+  }
     Set<String> _selected={'Late'};
-
+     
     void updateSelected(Set<String> newSelection){
       setState(() {
         _selected = newSelection;
       });
     }
+
+    Future<void> fetchBusName(String? busId) async {
+      return _firestore.collection('bus').doc(busId).get().then((value) {
+        setState(() {
+          busName = value['nom'];
+        });
+      });
+    }
     Future<void> updateNotification(Set<String>alert) async {
       String alertString= alert.toString();
-      String message='${voyage.busId} arrivera en retard à sa destination ${voyage.toStation} ';
+      
+      String message='Speciale \'$busName\' arrivera en retard à sa destination ${widget.voyage?.toStation} ';
       String currentDateTime = '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
       alertString=alertString.substring(1,alertString.length-1);
       print(alertString);
@@ -45,7 +50,7 @@ class _AddAlertState extends State<AddAlert> {
       if(alertString=='Late'){
         print(alertString);
         _firestore.collection('notifications').doc().set({
-          'voyageId':voyage.voyageId,
+          'voyageId':widget.voyage?.voyageId,
           'title':'Late',
           'message':message,
           'time':currentDateTime,
@@ -53,9 +58,9 @@ class _AddAlertState extends State<AddAlert> {
       }
       else if(alertString=='Malfunction'){
         _firestore.collection('notifications').doc().set({
-          'voyageId':voyage.voyageId,
+          'voyageId':widget.voyage?.voyageId,
           'title':'Malfunction',
-          'message':'${voyage.busId} s\'est arrêté en panne pendant son voyage depuis ${voyage.fromStation} à ${voyage.toStation} ',
+          'message':'Speciale \'$busName\' s\'est arrêté en panne pendant son voyage depuis ${widget.voyage?.fromStation} à ${widget.voyage?.toStation} ',
           'time':currentDateTime.toString(),
         });
       }

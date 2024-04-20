@@ -7,6 +7,7 @@ import 'package:unitransit_app_1/global/common/toast.dart';
 //import 'package:unitransit/add.alert.dart';
 import 'package:unitransit_app_1/models/voyage.dart';
 import 'package:unitransit_app_1/pages/main_page_chauff.dart';
+import 'package:unitransit_app_1/pages/page_alert.dart';
 
 class VoyagesWidget extends StatefulWidget {
   const VoyagesWidget({
@@ -152,11 +153,8 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 child:const Text('Arrivé'),
                 onPressed: (){
                   handleArrival(widget.voyage!.voyageId);
-                  
-                
                   // updateBusIdForDriver('');
                   //   updateDriverIdforBus('',widget.voyage!.busId);
-                //Navigator.push(context,MaterialPageRoute(builder: (context) => const HomePageChauffeur()),);
                 },),
               const SizedBox(width:40.0),
                 ElevatedButton(
@@ -165,7 +163,9 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 backgroundColor: getColor(Colors.red, Colors.white),
                 side: getBorder(Colors.blue, Colors.red)),
                 child:const Text('Alerte'),
-                onPressed: (){}//()=> Get.to(() =>  const AddAlert()),
+                onPressed: (){
+                  Navigator.push(context,MaterialPageRoute(builder: (context) => AddAlert(voyage:widget.voyage)),);
+                }//()=> Get.to(() =>  const AddAlert()),
                 
                 )
                 ],
