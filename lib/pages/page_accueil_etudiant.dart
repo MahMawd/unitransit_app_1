@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:unitransit_app_1/models/voyage.dart';
 import 'package:unitransit_app_1/pages/page_maps.dart';
 
 class HomePage extends StatefulWidget {
@@ -357,10 +358,12 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             voyage = querySnapshot.docs.map((doc) {
               return Voyage(
+                voyageId: doc.id,
                 departureTime: doc['departureTime'],
                 arrivalTime: doc['arrivaltime'],
                 fromStation: doc['fromStation'],
                 toStation: doc['ToStation'],
+                busId: doc['busId'],
                 fromStationLatLng: fromLatLng,
                 toStationLatLng: toLatLng,
               );
@@ -409,7 +412,7 @@ class _HomePageState extends State<HomePage> {
 
       // Show a success message or perform any other action as needed
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Trip added to notifications')),
+        const SnackBar(content: Text('Trip added to notifications')),
       );
     } catch (e) {
       debugPrint('Error adding trip to notifications: $e');
@@ -417,40 +420,3 @@ class _HomePageState extends State<HomePage> {
     }
   }
 }
-
-class Voyage {
-  final String departureTime;
-  final String arrivalTime;
-  final String fromStation;
-  final String toStation;
-  final LatLng fromStationLatLng;
-  final LatLng toStationLatLng;
-
-  Voyage({
-    required this.departureTime,
-    required this.arrivalTime,
-    required this.fromStation,
-    required this.toStation,
-    required this.fromStationLatLng,
-    required this.toStationLatLng,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'departureTime': departureTime,
-      'arrivalTime': arrivalTime,
-      'fromStation': fromStation,
-      'toStation': toStation,
-      // Convert LatLng to Map
-      'fromStationLatLng': {
-        'latitude': fromStationLatLng.latitude,
-        'longitude': fromStationLatLng.longitude,
-      },
-      'toStationLatLng': {
-        'latitude': toStationLatLng.latitude,
-        'longitude': toStationLatLng.longitude,
-      },
-    };
-  }
-}
-

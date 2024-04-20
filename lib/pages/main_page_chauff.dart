@@ -4,6 +4,7 @@ import 'package:unitransit_app_1/pages/profile_chauffeur.dart';
 
 class HomePageChauffeur extends StatefulWidget{
   const HomePageChauffeur({super.key});
+  
   @override
   State<HomePageChauffeur> createState()=>_HomePageChauffeur();
 }
@@ -26,10 +27,10 @@ class _HomePageChauffeur extends State<HomePageChauffeur>{
         },
         items:const [
           BottomNavigationBarItem(icon: Icon(Icons.home),
-          label: "Accueil"
+          label: "Home"
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person),
-          label: "Profil"
+          label: "Profile"
           ),
         ]
       ),
