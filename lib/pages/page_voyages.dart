@@ -13,7 +13,7 @@ class PageVoyages extends StatelessWidget{
   Widget build(BuildContext context) {
     
     return Scaffold(
-      appBar: AppBar(title: const Text('choose your route'),),
+      appBar: AppBar(title: const Text('Choisissez votre itinéraire'),),
       body: voyages.isNotEmpty ? 
       ListView.separated(
         itemBuilder:(context, index) {
@@ -25,7 +25,7 @@ class PageVoyages extends StatelessWidget{
         separatorBuilder: (context,index){return const SizedBox(height: 10,);}, 
         itemCount: voyages.length
         )
-      : const Text('no routes available'),
+      : const Text('Aucun itinéraire disponible'),
     );
   }
 }

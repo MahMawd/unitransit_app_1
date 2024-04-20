@@ -100,7 +100,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
       updateVoyagesListForDriver(voyId);
     }
     }on NotCurrentBusException catch(e){
-      showToast(message: 'You are not driving this bus');
+      showToast(message: 'Vous ne conduisez pas ce bus');
       print(e.code);
     }
     catch(e){
@@ -123,10 +123,10 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
             alignment: WrapAlignment.center,
             direction: Axis.vertical,
                 children: [
-              Text('Departure: ${widget.voyage?.departureTime}'),
-              Text('\n From:${widget.voyage?.fromStation}\n coords: ${widget.voyage?.fromStationLatLng}'),
-              Text('\n To:${widget.voyage?.toStation}\n coords: ${widget.voyage?.toStationLatLng}'),
-              Text('\n Voyage id: ${widget.voyage?.voyageId}'),
+              Text('Départ: ${widget.voyage?.departureTime}'),
+              Text('\n De:${widget.voyage?.fromStation}'),
+              Text('\n À:${widget.voyage?.toStation}'),
+              //Text('\n Voyage id: ${widget.voyage?.voyageId}'),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
@@ -134,7 +134,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 foregroundColor: getColor(Colors.black, Colors.white),
                 backgroundColor: getColor(Colors.green, Colors.white),
                 side: getBorder(Colors.blue, Colors.green)),
-                child:const Text('Start'),
+                child:const Text('Démarrer'),
                 onPressed: (){
                   fetchDriverId();
                   handleStart(widget.voyage!.voyageId);
@@ -149,7 +149,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 foregroundColor: getColor(Colors.black, Colors.white),
                 backgroundColor: getColor(Colors.white, Colors.blue),
                 side: getBorder(Colors.blue, Colors.blue)),
-                child:const Text('Arrived'),
+                child:const Text('Arrivé'),
                 onPressed: (){
                   handleArrival(widget.voyage!.voyageId);
                   
@@ -164,7 +164,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 foregroundColor: getColor(Colors.white, Colors.black),
                 backgroundColor: getColor(Colors.red, Colors.white),
                 side: getBorder(Colors.blue, Colors.red)),
-                child:const Text('Alert '),
+                child:const Text('Alerte'),
                 onPressed: (){}//()=> Get.to(() =>  const AddAlert()),
                 
                 )
@@ -200,8 +200,8 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
     }
 }
 class NotCurrentBusException implements Exception{
-  String code ="You have not started this voyage";
+  String code ="Vous n'avez pas commencé ce voyage";
 }
 class AlreadyStartedException implements Exception{
-  String code = "You have already started this voyage";
+  String code = "Vous avez déjà commencé ce voyage.";
 }

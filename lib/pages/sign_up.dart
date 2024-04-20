@@ -29,7 +29,7 @@ class _SignUpState extends State<SignUp> {
       if(usernameController.text==''){
         throw EmptyUsernameException();
       }
-      if(emailController.text==''){
+      if(emailController.text.trim()==''){
         throw EmptyEmailException();
       }
       if(passwordController.text==''){
@@ -47,7 +47,7 @@ class _SignUpState extends State<SignUp> {
 
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
-        email: emailController.text,
+        email: emailController.text.trim(),
         password: passwordController.text,
       );
 
@@ -55,7 +55,7 @@ class _SignUpState extends State<SignUp> {
 
     await FirebaseFirestore.instance.collection('etudiant').doc(userId).set({
       'CIN':cinController.text,
-      'email': emailController.text,
+      'email': emailController.text.trim(),
       'name':nameController.text,
       'password':passwordController.text,
       'username':usernameController.text,
@@ -63,19 +63,19 @@ class _SignUpState extends State<SignUp> {
     });
 
     debugPrint('Signed up user: $userId');
-    showToast(message: 'Account successfully signed up');
+    showToast(message: 'Compte créé avec succès');
     Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => const Authentification()),
   );
   }on FirebaseAuthException catch(e){
     if(e.code=='email-already-in-use'){
-      showToast(message:'Email already in use');
+      showToast(message:'L\'e-mail est déjà utilisé');
     }else if(e.code=='invalid-email'){
-      showToast(message:'Invalid email');
+      showToast(message:'E-mail invalide');
     }
     else if(e.code=='weak-password'){
-      showToast(message: 'The password must atleast contain 6 characters');
+      showToast(message: 'Le mot de passe doit contenir au moins 6 caractères');
     }
     else {
       showToast(message:'Error: ${e.code}');
@@ -133,13 +133,13 @@ class _SignUpState extends State<SignUp> {
                 ZoneTexte(
                   controller: nameController,
                   obscureText: false,
-                  hintText: "Full name",
+                  hintText: "Nom complet",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
                   controller: usernameController,
                   obscureText: false,
-                  hintText: "Username",
+                  hintText: "Nom d'utilisateur",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
@@ -151,13 +151,13 @@ class _SignUpState extends State<SignUp> {
                 ZoneTexte(
                   controller: passwordController,
                   obscureText: true,
-                  hintText: "Password",
+                  hintText: "Mot de passe",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
                   controller: confirmPasswordController,
                   obscureText: true,
-                  hintText: "Confirm password",
+                  hintText: "Confirmez le mot de passe",
                 ),
                 const SizedBox(height: 20.0),
                 ZoneTexte(
@@ -168,13 +168,13 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 30.0),
                 Boutton(
                   onTap:_signUp,
-                  text: "Create account",
+                  text: "Créer un compte",
                 ),
                 const SizedBox(height: 30.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account? "),
+                    const Text("Vous avez déjà un compte ? "),
                     GestureDetector(
                       onTap:(){
                         Navigator.push(
@@ -182,7 +182,7 @@ class _SignUpState extends State<SignUp> {
                           MaterialPageRoute(builder: (context) => const Authentification()));
                           },
                       child: const Text(
-                        "Connect",
+                        "Connecter",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
@@ -200,27 +200,27 @@ class _SignUpState extends State<SignUp> {
   }
 }
 class EmptyCINException implements Exception {
-  String code ='Type in CIN';
+  String code ='Saisissez votre CIN';
 }
 class EmptyConfirmPasswordException implements Exception {
-  String code ='Confirm the password';
+  String code ='Confirmez le mot de passe';
 }
 class EmptyPasswordException implements Exception {
-  String code ='Type in password';
+  String code ='Saisissez le mot de passe';
 }
 class EmptyEmailException implements Exception {
-  String code ='Type in email';
+  String code ='Saisissez votre e-mail';
 }
 class EmptyUsernameException implements Exception {
-  String code='Type in username';
+  String code='Saisissez votre nom d\'utilisateur';
 }
 
 class EmptyNameException implements Exception {
-  String code='Type in full name';
+  String code='Saisissez votre nom complet';
 }
 
 class PasswordMisMatchException implements Exception{
-  String code='The passwords do not match';
+  String code='Les mots de passe ne correspondent pas';
 }
 
 

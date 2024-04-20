@@ -37,7 +37,7 @@ class _AddAlertState extends State<AddAlert> {
     }
     Future<void> updateNotification(Set<String>alert) async {
       String alertString= alert.toString();
-      String message='${voyage.busId} will arive late to its destination ${voyage.toStation} ';
+      String message='${voyage.busId} arrivera en retard à sa destination ${voyage.toStation} ';
       String currentDateTime = '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
       alertString=alertString.substring(1,alertString.length-1);
       print(alertString);
@@ -55,7 +55,7 @@ class _AddAlertState extends State<AddAlert> {
         _firestore.collection('notifications').doc().set({
           'voyageId':voyage.voyageId,
           'title':'Malfunction',
-          'message':'${voyage.busId} has broken down during its voyage from ${voyage.fromStation} to ${voyage.toStation} ',
+          'message':'${voyage.busId} s\'est arrêté en panne pendant son voyage depuis ${voyage.fromStation} à ${voyage.toStation} ',
           'time':currentDateTime.toString(),
         });
       }
@@ -82,7 +82,7 @@ class _AddAlertState extends State<AddAlert> {
               children:  [
                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text('Add Alert',style: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold,),),
+                  children: [Text('Ajouter alerte',style: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold,),),
               SizedBox(height: 8,),],
                      ),
               ],
@@ -99,7 +99,7 @@ class _AddAlertState extends State<AddAlert> {
                  const  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Kind of alert',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),),
+                      Text('Type d\'alerte',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),),
                       Icon(Icons.more_horiz),
                     ],
                   ),
@@ -113,12 +113,12 @@ class _AddAlertState extends State<AddAlert> {
                         ButtonSegment<String>(
                           value: 'Late',
                           icon: Icon(Icons.bus_alert),
-                          label: Text('Running Late'),
+                          label: Text('En retard.'),
                         ),
                         ButtonSegment<String>(
                           value: 'Malfunction',
                           icon: Icon(Icons.bus_alert),
-                          label: Text('Malfunction')
+                          label: Text('Panne')
                         ),
 
                       ], 
@@ -132,7 +132,7 @@ class _AddAlertState extends State<AddAlert> {
                     foregroundColor: getColor(Colors.black, Colors.white),
                     backgroundColor: getColor(Colors.white, Colors.red),
                     side: getBorder(Colors.blue, Colors.red)),
-                    child:const Text('Envoye alert'),
+                    child:const Text('Envoyer alerte'),
                     onPressed: (){updateNotification(_selected);},),
                 ],
               ),

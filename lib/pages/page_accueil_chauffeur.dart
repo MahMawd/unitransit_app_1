@@ -45,78 +45,78 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       //await fetchPlannedTrips();
     }
   }
-  Future<void> fetchDriversBusId() async {
-    try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-      .collection('chauffeur').doc(driverId).get();
+  // Future<void> fetchDriversBusId() async {
+  //   try {
+  //     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+  //     .collection('chauffeur').doc(driverId).get();
 
-      if(documentSnapshot.exists){
+  //     if(documentSnapshot.exists){
 
-          currentBusId=documentSnapshot['busId'];
+  //         currentBusId=documentSnapshot['busId'];
 
-      }
-    }catch(e){
-      print('error occured fetching drivers current bus id $e');
-    }
-  }
+  //     }
+  //   }catch(e){
+  //     print('error occured fetching drivers current bus id $e');
+  //   }
+  // }
 
-  Future<void> handleDriverState() async {
-    String driverStateV = await driverState;
-    if(driverStateV=='driving'){
-      await fetchDriversBusId();
-      fetchPlannedTrips(currentBusId);
-    }
-  }
+  // Future<void> handleDriverState() async {
+  //   String driverStateV = await driverState;
+  //   if(driverStateV=='driving'){
+  //     await fetchDriversBusId();
+  //     fetchPlannedTrips(currentBusId);
+  //   }
+  // }
 
-  Future<void> fetchAvailableBuses() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('bus')
-          .where('disponible', isEqualTo: true)
-          .where('driverId', isEqualTo: '')
-          .get();
-          if(querySnapshot.docs.isNotEmpty){
-            setState(() {
-              availableSectors = querySnapshot.docs.map((doc){
-                return Bus(
-                busId: doc.id,
-                disponible: doc['disponible'],
-                driverId: doc['driverId'],
-                nom: doc['nom'],
-                );
-              }).toList();
-            });
-            print('Sectors:');
-            print(availableSectors);
-          }else{
-            debugPrint('no buses available');
-          }
-    }catch(e){
-      debugPrint('Error fetching available buses: $e');
-    }
-  }
-  Future<String> checkIsDriverDrivingBus() async {
-    try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-      .collection('chauffeur')
-      .doc(driverId)
-      .get();
-      if(documentSnapshot.exists && documentSnapshot['busId']==''){
-        print('driver not driving');
-        return 'not_driving';
-      }else if(documentSnapshot.exists && documentSnapshot['busId']!=''){
-        print('driver driving');
-        return 'driving';
-      }
-      else {
-        print('unknown error in checkIsDriverDrivingBus');
-        return 'unkown error';
-      }
-    }catch(e){
-      print('Error checking is driver driving bus: $e');
-      return 'error occured';
-    }
-  }
+  // Future<void> fetchAvailableBuses() async {
+  //   try {
+  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //         .collection('bus')
+  //         .where('disponible', isEqualTo: true)
+  //         .where('driverId', isEqualTo: '')
+  //         .get();
+  //         if(querySnapshot.docs.isNotEmpty){
+  //           setState(() {
+  //             availableSectors = querySnapshot.docs.map((doc){
+  //               return Bus(
+  //               busId: doc.id,
+  //               disponible: doc['disponible'],
+  //               driverId: doc['driverId'],
+  //               nom: doc['nom'],
+  //               );
+  //             }).toList();
+  //           });
+  //           print('Sectors:');
+  //           print(availableSectors);
+  //         }else{
+  //           debugPrint('no buses available');
+  //         }
+  //   }catch(e){
+  //     debugPrint('Error fetching available buses: $e');
+  //   }
+  // }
+  // Future<String> checkIsDriverDrivingBus() async {
+  //   try {
+  //     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+  //     .collection('chauffeur')
+  //     .doc(driverId)
+  //     .get();
+  //     if(documentSnapshot.exists && documentSnapshot['busId']==''){
+  //       print('driver not driving');
+  //       return 'not_driving';
+  //     }else if(documentSnapshot.exists && documentSnapshot['busId']!=''){
+  //       print('driver driving');
+  //       return 'driving';
+  //     }
+  //     else {
+  //       print('unknown error in checkIsDriverDrivingBus');
+  //       return 'unkown error';
+  //     }
+  //   }catch(e){
+  //     print('Error checking is driver driving bus: $e');
+  //     return 'error occured';
+  //   }
+  // }
   Future<LatLngPair> fetchStationCoords(String stationFrom, String stationTo) async {
     try {
       QuerySnapshot fromSnapshot = await FirebaseFirestore.instance
@@ -145,6 +145,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
         return LatLngPair(LatLng(0.0, 0.0), LatLng(0.0, 0.0));
       }
     }
+
   Future<void> fetchPlannedTrips(String driverBusId) async {
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -251,11 +252,11 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Home Page Driver",
+                          Text("Page d'accueil chauffeur",
                           style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,
                           ),
                           ),
-                          Text('Welcome ',
+                          Text('Bienvenue ',
                           style: TextStyle(fontSize: 18),
                           ),
                         ],
@@ -274,7 +275,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                         String voyageId = plannedVoyagesDocs[index];
                         print(voyageId);
                         //LatLng fromS=new LatLng(0.0, 0.0);LatLng toS=new LatLng(0.0, 0.0);
-                        print("9bal future builder");
+
                         return 
                         FutureBuilder(
                           future: fetchVoyage(voyageId), 
@@ -293,7 +294,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                       
                       ),
                   )
-                    : const SizedBox(height:500, child: Center(child: Text("No planned trips contact administration")))
+                    : const SizedBox(height:500, child: Center(child: Text("Pas de voyages prévus, veuillez contacter l'administration.")))
                      : const Center(child: CircularProgressIndicator()),
                 ],
               ),
