@@ -305,6 +305,12 @@ class _HomePageState extends State<HomePage> {
                                             'Departure: ${currentVoyage.departureTime}'),
                                         subtitle: Text(
                                             'From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.add),
+                                          onPressed: () {
+                                            addTripToNotifications(currentVoyage);
+                                          },
+                                        ),
                                       ),
                                     ),
                                   );
@@ -377,7 +383,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchStationNames() async {
     try {
       QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection('station').get();
+          await FirebaseFirestore.instance.collection('station').get();
 
       setState(() {
         stationName =
@@ -386,6 +392,28 @@ class _HomePageState extends State<HomePage> {
       });
     } catch (e) {
       debugPrint("Error fetching station names: $e");
+    }
+  }
+
+  Future<void> addTripToNotifications(Voyage voyage) async {
+    try {
+      // Get the current user's document from Firestore
+      String userId = 'user_id_here'; // Replace with actual user ID
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('etudiant').doc(userId);
+
+      // Add the voyage to the notifications array
+      await userRef.update({
+        'notifications': FieldValue.arrayUnion([voyage.toMap()])
+      });
+
+      // Show a success message or perform any other action as needed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Trip added to notifications')),
+      );
+    } catch (e) {
+      debugPrint('Error adding trip to notifications: $e');
+      // Show an error message or perform error handling as needed
     }
   }
 }
@@ -406,4 +434,23 @@ class Voyage {
     required this.fromStationLatLng,
     required this.toStationLatLng,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'departureTime': departureTime,
+      'arrivalTime': arrivalTime,
+      'fromStation': fromStation,
+      'toStation': toStation,
+      // Convert LatLng to Map
+      'fromStationLatLng': {
+        'latitude': fromStationLatLng.latitude,
+        'longitude': fromStationLatLng.longitude,
+      },
+      'toStationLatLng': {
+        'latitude': toStationLatLng.latitude,
+        'longitude': toStationLatLng.longitude,
+      },
+    };
+  }
 }
+
