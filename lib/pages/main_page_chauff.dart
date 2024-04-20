@@ -27,10 +27,10 @@ class _HomePageChauffeur extends State<HomePageChauffeur>{
         },
         items:const [
           BottomNavigationBarItem(icon: Icon(Icons.home),
-          label: "Home"
+          label: "Accueil"
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person),
-          label: "Profile"
+          label: "Profil"
           ),
         ]
       ),

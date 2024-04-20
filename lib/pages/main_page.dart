@@ -28,10 +28,10 @@ class _MainPageState extends State<MainPageEtudiant>{
         },
         items:const [
           BottomNavigationBarItem(icon: Icon(Icons.home),
-          label: "Home"
+          label: "Accueil"
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person),
-          label: "Profile"
+          label: "Profil"
           ),
           BottomNavigationBarItem(icon: Icon(Icons.notifications),
           label: "Notifications"

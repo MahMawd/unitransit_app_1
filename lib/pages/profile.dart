@@ -10,13 +10,6 @@ class ProfileScreen extends StatelessWidget{
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text("Profile",
-        style: Theme.of(context).textTheme.headlineMedium ),
-        actions: const [
-
-        ],
-      ),*/
       body:SingleChildScrollView(
         child: Container(
             padding: const EdgeInsets.all(10),
@@ -74,7 +67,7 @@ class ProfileScreen extends StatelessWidget{
                     debugPrint('Failed to sign out: $e');
                   }
                 },
-                child: const Text('Sign Out',style: TextStyle(color: Colors.red,),),
+                child: const Text('Déconnexion',style: TextStyle(color: Colors.red,),),
                 
               ),
               ],

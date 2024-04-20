@@ -22,55 +22,54 @@ class _AuthentificationState extends State<Authentification> {
 
   Future<void> _signIn() async {
   try {
-    if (emailController.text == '') {
+    if (emailController.text.trim() == '') {
       throw EmptyEmailException();
     }
     if (passwordController.text == '') {
       throw EmptyPasswordException();
     }
     final UserCredential userCredential = await auth.signInWithEmailAndPassword(
-      email: emailController.text,
+      email: emailController.text.trim(),
       password: passwordController.text,
     );
     debugPrint('Signed in user: ${userCredential.user!.uid}');
     
-    // Determine user type based on collection
     String userType = await _getUserType(userCredential.user!.uid);
     debugPrint(userType);
-    // Navigate to appropriate page or perform actions based on user type
+
     if (userType == 'etudiant') {
-      // Do something specific for 'etudiant' users
+
       _handleEtudiantSignIn();
     } else if (userType == 'chauffeur') {
-      // Do something specific for 'chauffeur' users
+
       _handleChauffeurSignIn();
     } else {
-      // Handle other user types if needed
+
     }
   } on FirebaseAuthException catch (e) {
     if(e.code =='invalid-credential'){
-        showToast(message:'Invalid email or password');
+        showToast(message:'Email ou mot de passe invalide');
       }else if(e.code=='channel-error'){
-        showToast(message: 'Type in the email and password');
+        showToast(message: 'Saisissez l\'e-mail et le mot de passe.');
       }
       else{
-        showToast(message:'Error: ${e.code}');
+        showToast(message:'Erreur : ${e.code}');
         debugPrint('ERROR:$e');
       }
   } on EmptyEmailException catch (e) {
-    showToast(message:'Error: ${e.code}');
+    showToast(message:'Erreur: ${e.code}');
   } on EmptyPasswordException catch (e) {
-    showToast(message:'Error: ${e.code}');
+    showToast(message:'Erreur: ${e.code}');
   } catch (e) {
     debugPrint('Failed to sign in: $e');
   }
 }
 Future<void> _resetPassword() async {
     try {
-      await auth.sendPasswordResetEmail(email: emailController.text);
-      showToast(message: 'Password reset email sent. Check your email inbox.');
+      await auth.sendPasswordResetEmail(email: emailController.text.trim());
+      showToast(message: 'Email de réinitialisation du mot de passe envoyé. Veuillez vérifier votre boîte de réception');
     } catch (e) {
-      showToast(message: 'Failed to send password reset email: $e');
+      showToast(message: 'Échec de l\'envoi de l\'e-mail de réinitialisation du mot de passe: $e');
     }
   }
 void _handleEtudiantSignIn() {
@@ -134,7 +133,7 @@ Future<String> _getUserType(String uid) async {
                 ZoneTexte(
                   controller: passwordController,
                   obscureText: true,
-                  hintText: "Password",
+                  hintText: "Mot de passe",
                 ),
                 const SizedBox(height: 10.0),
                 const Padding(
@@ -142,14 +141,14 @@ Future<String> _getUserType(String uid) async {
                   child:  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("Forgot password"),
+                      Text("Mot de passe oublié"),
                     ],
                   ),
                 ),
               const SizedBox(height: 30.0),
               Boutton(
                 onTap:()=>_signIn(),
-                text: "Sign in",
+                text: "Connexion",
               ),
               const SizedBox(height: 30.0),
               // Boutton(
@@ -158,7 +157,7 @@ Future<String> _getUserType(String uid) async {
               // ),
               //const SizedBox(height: 30.0),
               Boutton(
-                text: "Create an account",
+                text: "Créer un compte",
                 onTap:(){
                    Navigator.push(
               context,

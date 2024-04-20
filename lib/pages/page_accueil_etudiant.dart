@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Search Bus',
+                                'Recherche de bus',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 24,
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                                 height: 8,
                               ),
                               Text(
-                                'choose your placement !',
+                                'Choisissez votre emplacement !',
                                 style: TextStyle(color: Colors.white),
                               )
                             ],
@@ -96,9 +96,9 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               width: 10,
                             ),
-                            const Text("From"),
+                            const Text("De"),
                             const SizedBox(
-                              width: 5,
+                              width: 20,
                             ),
                             SizedBox(
                               width: 264,
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                                           snapshot.data?.docs.reversed.toList();
                                       stationItems.add(const DropdownMenuItem(
                                           value: '0',
-                                          child: Text('Select Station')));
+                                          child: Text('Selectionner Station')));
                                       for (var s in stations!) {
                                         stationItems.add(
                                           DropdownMenuItem(
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                                         snapshot.data?.docs.reversed.toList();
                                     stationItems.add(const DropdownMenuItem(
                                         value: '0',
-                                        child: Text('Select Station')));
+                                        child: Text('Selectionner Station')));
                                     for (var s in stations!) {
                                       stationItems.add(
                                         DropdownMenuItem(
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                 ),
-                                child: const Text("Search"),
+                                child: const Text("Rechercher"),
                               ),
                             ),
                           ],
@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Times',
+                              'Voyages',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -303,15 +303,15 @@ class _HomePageState extends State<HomePage> {
                                       child: ListTile(
                                         leading: const Icon(Icons.timer),
                                         title: Text(
-                                            'Departure: ${currentVoyage.departureTime}'),
+                                            'Départ: ${currentVoyage.departureTime}'),
                                         subtitle: Text(
-                                            'From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
+                                            'De: ${currentVoyage.fromStation} - À: ${currentVoyage.toStation} \nArrivée: ${currentVoyage.arrivalTime}'),
                                       ),
                                     ),
                                   );
                                 },
                               )
-                            : const Text("No data"),
+                            : const Text("Pas de données"),
                       ],
                     ),
                   ),

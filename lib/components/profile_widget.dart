@@ -17,11 +17,11 @@ class GetProfile extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
         if (snapshot.hasError) {
-          return const Text("Something went wrong");
+          return const Text("Quelque chose s'est mal passé");
         }
 
         if (snapshot.hasData && !snapshot.data!.exists) {
-          return const Text("Document does not exist");
+          return const Text("Le document n'existe pas.");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -31,9 +31,9 @@ class GetProfile extends StatelessWidget {
             const SizedBox(height: 30),
               const Divider(),
               const SizedBox(height: 10),
-              ProfileMenuWidget(title:"Username" ,subtitle: '${data['username']}',icon:Icons.account_box ,onPress: (){},endIcon: false,textColor: Colors.black,),
-              ProfileMenuWidget(title:"Email" ,subtitle: '${data['email']}',icon:Icons.email ,onPress: (){},endIcon: false,textColor: Colors.black,),
-              ProfileMenuWidget(title:"Password" ,subtitle: '${data['password']}',icon:Icons.fingerprint ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"Nom d'utilisateur" ,subtitle: '${data['username']}',icon:Icons.account_box ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"E-mail" ,subtitle: '${data['email']}',icon:Icons.email ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"Mot de passe" ,subtitle: '${data['password']}',icon:Icons.fingerprint ,onPress: (){},endIcon: false,textColor: Colors.black,),
               const Divider(),
               const SizedBox(height: 10),
               ProfileMenuWidget(title:"ID" ,subtitle: '${data['ID']}',icon:Icons.edit ,onPress: (){},endIcon: false,textColor: Colors.black,),
@@ -43,9 +43,9 @@ class GetProfile extends StatelessWidget {
             const SizedBox(height: 30),
               const Divider(),
               const SizedBox(height: 10),
-              ProfileMenuWidget(title:"Username" ,subtitle: '${data['username']}',icon:Icons.account_box ,onPress: (){},endIcon: false,textColor: Colors.black,),
-              ProfileMenuWidget(title:"Email" ,subtitle: '${data['email']}',icon:Icons.email ,onPress: (){},endIcon: false,textColor: Colors.black,),
-              ProfileMenuWidget(title:"Password" ,subtitle: '${data['password']}',icon:Icons.fingerprint ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"Nom d'utilisateur" ,subtitle: '${data['username']}',icon:Icons.account_box ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"E-mail" ,subtitle: '${data['email']}',icon:Icons.email ,onPress: (){},endIcon: false,textColor: Colors.black,),
+              ProfileMenuWidget(title:"Mot de passe" ,subtitle: '${data['password']}',icon:Icons.fingerprint ,onPress: (){},endIcon: false,textColor: Colors.black,),
               const Divider(),
               const SizedBox(height: 10),
               ProfileMenuWidget(title:"CIN" ,subtitle: '${data['CIN']}',icon:Icons.edit ,onPress: (){},endIcon: false,textColor: Colors.black,),
@@ -58,7 +58,7 @@ class GetProfile extends StatelessWidget {
             SizedBox(height: 30),
               Divider(),
               SizedBox(height: 10),
-            Text("loading"),
+            Text("Chargement"),
             CircularProgressIndicator(),
           ],
         );

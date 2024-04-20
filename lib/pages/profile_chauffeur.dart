@@ -12,7 +12,7 @@ class ProfileScreenChauffeur extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Profile",
+        title: Text("Profil",
         style: Theme.of(context).textTheme.headlineMedium ),
         actions: const [
 
@@ -73,7 +73,7 @@ class ProfileScreenChauffeur extends StatelessWidget{
                     debugPrint('Failed to sign out: $e');
                   }
                 },
-                child: const Text('Sign Out'),
+                child: const Text('Déconnexion'),
               ),
               ],
             ),
