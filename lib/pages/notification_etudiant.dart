@@ -1,3 +1,5 @@
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,7 +17,7 @@ class NotificationView extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body: const NotificationList(),
+      body:NotificationList(),
     );
   }
 }
@@ -30,39 +32,44 @@ class NotificationList extends StatelessWidget {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        }/* else if (snapshot.hasError) {
+        }else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        }*/ else if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+        }else if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No notifications available'));
         } else {
           return FutureBuilder<List<String>>(
-            future: _fetchSubscribedTrips(), // Fetch subscribed trips
-            builder: (context, tripsSnapshot) {
+            future: _fetchSubscribedTrips(),
+            builder: (context,tripsSnapshot) {
               if (tripsSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
-              }/* else if (tripsSnapshot.hasError) {
+              }else if (tripsSnapshot.hasError) {
                 return Center(child: Text('Error: ${tripsSnapshot.error}'));
-              } */else {
-                List<String> subscribedTrips = tripsSnapshot.data ?? [];
+              }
+              else {
+                if(tripsSnapshot.hasData && tripsSnapshot.data != null && tripsSnapshot.data!.isNotEmpty){
+                  List<String> subscribedTrips = tripsSnapshot.data ?? [];
+                  print(snapshot.data!.docs.length);
                 return ListView.separated(
                   itemCount: snapshot.data!.docs.length,
                   separatorBuilder: (context, index) => const Divider(height: 0),
                   itemBuilder: (context, index) {
                     var notification = snapshot.data!.docs[index];
-                    // Check if the notification's trip is in the user's subscribed trips
+                    print(subscribedTrips);
+                    print(notification['voyageId']);
                     if (subscribedTrips.contains(notification['voyageId'])) {
+                      print('aaa');
                       return NotificationListItem(
                         message: notification['message'],
                         time: notification['time'],
                         title: notification['title'],
                       );
-                    } else {
-                      print("herelalal");
-                      // Return an empty container if the user is not subscribed to this trip
-                      return Container();
                     }
                   },
                 );
+
+                }else {
+                  return Center(child: Text('Aucune notification, abonnez-vous à un voyage'));
+                }
               }
             },
           );
@@ -72,11 +79,12 @@ class NotificationList extends StatelessWidget {
   }
 
   Future<List<String>> _fetchSubscribedTrips() async {
-    // Fetch subscribed trips from the 'etudiant' collection
-    String userId = FirebaseAuth.instance.currentUser!.uid; // Replace 'user_id' with the actual user ID
+
+    String userId = FirebaseAuth.instance.currentUser!.uid; 
     DocumentSnapshot<Map<String, dynamic>> userSnapshot = await FirebaseFirestore.instance.collection('etudiant').doc(userId).get();
-    List<dynamic> voyages = userSnapshot.data()?['voyages'] ?? [];
-    List<String> subscribedTrips = voyages.map((voyage) => voyage['voyageId'] as String).toList();
+
+    List<dynamic> voyages = await userSnapshot.data()?['voyages'] ?? [];
+    List<String> subscribedTrips = voyages.map((voyage) => voyage as String).toList();
     return subscribedTrips;
   }
 }

@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late String etudiantId;
   List<String> stations = [
     'Campus Manar',
     'El Menzah',
@@ -31,6 +32,31 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     fetchStationNames();
   }
+  bool loading=false;
+  void _toggleLoading() {
+    setState(() {
+      loading = !loading;
+    });
+  }
+  Future<void> fetchEtudiantId() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      etudiantId = user.uid;
+      //await fetchPlannedTrips();
+    }
+  }
+
+  Future<bool> checkEtudiantSubs(String voyage) async {
+    fetchEtudiantId();
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('etudiant').doc(etudiantId).get();
+      List<dynamic> firestoreArray = documentSnapshot['voyages'];
+      print(firestoreArray);
+      if(firestoreArray.contains(voyage)){
+        return true;
+      }else{
+        return false;
+      }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +71,10 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       //greeting row
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -68,17 +94,7 @@ class _HomePageState extends State<HomePage> {
                               )
                             ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.all(12),
-                            child: const Icon(
-                              Icons.notifications,
-                              color: Colors.white,
-                            ),
-                          )
+                          
                         ],
                       ),
                       const SizedBox(
@@ -99,10 +115,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const Text("De"),
                             const SizedBox(
-                              width: 20,
+                              width: 10,
                             ),
                             SizedBox(
-                              width: 264,
+                              width: 220,
                               child: StreamBuilder(
                                   stream: FirebaseFirestore.instance
                                       .collection('station')
@@ -129,7 +145,6 @@ class _HomePageState extends State<HomePage> {
                                     return DropdownButton(
                                       items: stationItems,
                                       onChanged: (sValue) {
-                                        //print(sValue);
                                         setState(() {
                                           selectedStationFrom = sValue;
                                         });
@@ -158,9 +173,9 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               width: 10,
                             ),
-                            const Text("To"),
+                            const Text("À"),
                             const SizedBox(
-                              width: 20,
+                              width: 18,
                             ),
                             StreamBuilder(
                                 stream: FirebaseFirestore.instance
@@ -188,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                                   return DropdownButton(
                                     items: stationItems,
                                     onChanged: (sValue) {
-                                      //print(sValue);
+
                                       setState(() {
                                         selectedStationTo = sValue;
                                       });
@@ -205,40 +220,26 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       Container(
-                        /*decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),*/
                         padding: const EdgeInsets.all(12),
                         child: Row(
                           children: [
-                            /*const Icon(
-                    Icons.search,
-                    color: Colors.black,
-                  ),*/
                             const SizedBox(
-                              width: 20,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                              width: 30,
-                              child: Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              ),
+                              width: 40,
                             ),
                             SizedBox(
                               height: 50,
                               width: 270,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  fetchData(
+                                onPressed: ()async {
+                                  _toggleLoading();
+                                  await fetchData(
                                       selectedStationFrom, selectedStationTo);
+                                      _toggleLoading();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                 ),
-                                child: const Text("Rechercher"),
+                                child:loading ? CircularProgressIndicator() : Text("Rechercher"),
                               ),
                             ),
                           ],
@@ -309,9 +310,14 @@ class _HomePageState extends State<HomePage> {
                                             'From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
                                         trailing: IconButton(
                                           icon: const Icon(Icons.add),
-                                          onPressed: () {
-                                            addTripToNotifications(
-                                                currentVoyage);
+                                          onPressed: () async {
+                                            bool check = await checkEtudiantSubs(currentVoyage.voyageId);
+                                            if(!check){
+                                              addTripToNotifications(currentVoyage);
+                                            }else {
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vous suivez déjà ce voyage')),);
+                                            }
+                                            
                                           },
                                         ),
                                       ),
@@ -402,24 +408,23 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> addTripToNotifications(Voyage voyage) async {
   try {
-    // Get the current user's ID dynamically
+
     String userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Get reference to the user document
+
     DocumentReference userRef = FirebaseFirestore.instance.collection('etudiant').doc(userId);
 
-    // Add the voyage document ID to the user's "voyages" array
+
     await userRef.update({
       'voyages': FieldValue.arrayUnion([voyage.voyageId])
     });
 
-    // Show a success message or perform any other action as needed
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Trip added')),
+      const SnackBar(content: Text('Voyage ajouté')),
     );
   } catch (e) {
     debugPrint('Error adding trip to notifications: $e');
-    // Show an error message or perform error handling as needed
+
   }
 }
 

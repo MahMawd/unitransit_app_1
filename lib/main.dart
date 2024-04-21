@@ -34,7 +34,7 @@ class UniTransitApp extends StatelessWidget{
   Widget build(BuildContext context){
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPageEtudiant(),
+      home: Authentification(),
     );
   }
 }

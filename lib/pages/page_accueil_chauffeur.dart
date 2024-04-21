@@ -181,9 +181,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       DocumentSnapshot documentSnapshot = await _firestore.collection('chauffeur').doc(driverId).get();
       await Future.delayed(const Duration(milliseconds: 500));
       if(documentSnapshot.exists){
-        print("slm");
         List<dynamic> firestoreArray = documentSnapshot['voyages'];
-        
         setState(() {
           plannedVoyagesDocs=firestoreArray.map((element) => element.toString()).toList();
           isLoading = false;
@@ -232,15 +230,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.black,
-      //   //leading: IconButton(onPressed: ()=> Get.to(() =>  VoyagesWidget()), icon: const Icon(Icons.arrow_back,color: Colors.white,)),
-      //   title: Text("Driver Home Page",
-      //   style: Theme.of(context).textTheme.headlineMedium ),
-      //   actions: [
-          
-      //   ],
-      // ),
       body:
             SafeArea(
               child: Column(

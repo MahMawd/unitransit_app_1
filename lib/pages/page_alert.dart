@@ -21,8 +21,10 @@ class AddAlert extends StatefulWidget{
 class _AddAlertState extends State<AddAlert> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String busName='';
-  void initstate(){
-    fetchBusName(widget.voyage?.busId);
+  @override
+  void initState()async {
+    super.initState();
+    await fetchBusName(widget.voyage?.busId);
   }
     Set<String> _selected={'Late'};
      
@@ -51,7 +53,7 @@ class _AddAlertState extends State<AddAlert> {
         print(alertString);
         _firestore.collection('notifications').doc().set({
           'voyageId':widget.voyage?.voyageId,
-          'title':'Late',
+          'title':'Retard',
           'message':message,
           'time':currentDateTime,
         });
@@ -59,7 +61,7 @@ class _AddAlertState extends State<AddAlert> {
       else if(alertString=='Malfunction'){
         _firestore.collection('notifications').doc().set({
           'voyageId':widget.voyage?.voyageId,
-          'title':'Malfunction',
+          'title':'Panne',
           'message':'Speciale \'$busName\' s\'est arrêté en panne pendant son voyage depuis ${widget.voyage?.fromStation} à ${widget.voyage?.toStation} ',
           'time':currentDateTime.toString(),
         });
