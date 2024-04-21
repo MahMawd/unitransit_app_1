@@ -202,7 +202,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
   }
   
   Future<Voyage?> fetchVoyage(String docId,) async {
-    print('ahla');
+    //print('ahla');
   try {
     DocumentSnapshot documentSnapshot = await _firestore.collection('voyage').doc(docId).get();
     if (documentSnapshot.exists) {

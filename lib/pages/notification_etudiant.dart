@@ -1,5 +1,3 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,16 +46,16 @@ class NotificationList extends StatelessWidget {
               else {
                 if(tripsSnapshot.hasData && tripsSnapshot.data != null && tripsSnapshot.data!.isNotEmpty){
                   List<String> subscribedTrips = tripsSnapshot.data ?? [];
-                  print(snapshot.data!.docs.length);
+                  //print(snapshot.data!.docs.length);
                 return ListView.separated(
                   itemCount: snapshot.data!.docs.length,
                   separatorBuilder: (context, index) => const Divider(height: 0),
                   itemBuilder: (context, index) {
                     var notification = snapshot.data!.docs[index];
-                    print(subscribedTrips);
-                    print(notification['voyageId']);
+                    // print(subscribedTrips);
+                    // print(notification['voyageId']);
                     if (subscribedTrips.contains(notification['voyageId'])) {
-                      print('aaa');
+                      // print('aaa');
                       return NotificationListItem(
                         message: notification['message'],
                         time: notification['time'],
