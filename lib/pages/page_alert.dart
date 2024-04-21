@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:unitransit_app_1/pages/main_page_chauff.dart';
 //import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../models/voyage.dart';
-//import 'package:unitransit/driver.dart';
+
 
 class AddAlert extends StatefulWidget{
   final Voyage? voyage;
@@ -21,7 +22,9 @@ class AddAlert extends StatefulWidget{
 class _AddAlertState extends State<AddAlert> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String busName='';
-  void initstate(){
+  @override
+  void initState(){
+    super.initState();
     fetchBusName(widget.voyage?.busId);
   }
     Set<String> _selected={'Late'};
@@ -42,25 +45,24 @@ class _AddAlertState extends State<AddAlert> {
     Future<void> updateNotification(Set<String>alert) async {
       String alertString= alert.toString();
       
-      String message='Speciale \'$busName\' arrivera en retard à sa destination ${widget.voyage?.toStation} ';
       String currentDateTime = '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
       alertString=alertString.substring(1,alertString.length-1);
-      print(alertString);
-      print(alert);
+      // print(alertString);
+      // print(alert);
       if(alertString=='Late'){
-        print(alertString);
+        // print(alertString);
         _firestore.collection('notifications').doc().set({
           'voyageId':widget.voyage?.voyageId,
-          'title':'Late',
-          'message':message,
+          'title':'Retard',
+          'message':"Nous sommes désolés d’annoncer que le bus de station ${widget.voyage?.fromStation} en direction à ${widget.voyage?.toStation} subira un retard.",
           'time':currentDateTime,
         });
       }
       else if(alertString=='Malfunction'){
         _firestore.collection('notifications').doc().set({
           'voyageId':widget.voyage?.voyageId,
-          'title':'Malfunction',
-          'message':'Speciale \'$busName\' s\'est arrêté en panne pendant son voyage depuis ${widget.voyage?.fromStation} à ${widget.voyage?.toStation} ',
+          'title':'Panne',
+          'message':'Nous sommes désolés, le bus de trajet station ${widget.voyage?.fromStation} à ${widget.voyage?.toStation} est actuellement hors service en raison d’une panne technique',
           'time':currentDateTime.toString(),
         });
       }
@@ -70,7 +72,7 @@ class _AddAlertState extends State<AddAlert> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        //leading: IconButton(onPressed: ()=> Get.to(() =>  VoyagesWidget()), icon: const Icon(Icons.arrow_back,color: Colors.white,)),
+        leading: IconButton(onPressed: ()=> Get.to(() =>  const HomePageChauffeur()), icon: const Icon(Icons.arrow_back,color: Colors.white,)),
         title: Text("",
         style: Theme.of(context).textTheme.headlineMedium ),
       ),   
@@ -118,7 +120,7 @@ class _AddAlertState extends State<AddAlert> {
                         ButtonSegment<String>(
                           value: 'Late',
                           icon: Icon(Icons.bus_alert),
-                          label: Text('En retard.'),
+                          label: Text('En retard'),
                         ),
                         ButtonSegment<String>(
                           value: 'Malfunction',
