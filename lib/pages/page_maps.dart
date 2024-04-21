@@ -6,16 +6,17 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:unitransit_app_1/global/global_var.dart';
+import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart'; // Import the page you want to navigate to
 
 class MyMaps extends StatefulWidget {
   final LatLng fromStationLatLng;
   final LatLng toStationLatLng;
 
   const MyMaps({
-    super.key,
+    Key? key, // Add 'key' parameter here
     required this.fromStationLatLng,
     required this.toStationLatLng,
-  });
+  }) : super(key: key); // Add 'key' parameter to the super constructor
 
   @override
   State<MyMaps> createState() => _MyMapsState();
@@ -51,25 +52,19 @@ class _MyMapsState extends State<MyMaps> {
       setState(() {
         currentPositionOfUser = position;
         LatLng positionOfUserInLatLng = LatLng(currentPositionOfUser.latitude, currentPositionOfUser.longitude);
-        //CameraPosition cameraPosition = CameraPosition(target: positionOfUserInLatLng, zoom: 15);
-        //controllerGoogleMap!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
         // Update marker position
         markers = {
-          ...markers,
           Marker(
-            markerId: const MarkerId('currentPosition'),
+            markerId: const MarkerId('Marker 1'),
             icon: BitmapDescriptor.defaultMarker,
             position: positionOfUserInLatLng,
+            infoWindow: InfoWindow(title: 'Marker 1'), // Add info window
           ),
           Marker(
-            markerId: const MarkerId('fromStation'),
-            icon: BitmapDescriptor.defaultMarker,
-            position: widget.fromStationLatLng,
-          ),
-          Marker(
-            markerId: const MarkerId('toStation'),
+            markerId: const MarkerId('Marker 2'),
             icon: BitmapDescriptor.defaultMarker,
             position: widget.toStationLatLng,
+            infoWindow: InfoWindow(title: 'Marker 2'), // Add info window
           ),
         };
       });
@@ -91,6 +86,19 @@ class _MyMapsState extends State<MyMaps> {
               googleMapCompleterController.complete(controllerGoogleMap);
               getCurrentLiveLocationOfUser();
             },
+          ),
+          Positioned( // Add a positioned widget for overlay button
+            top: 16.0,
+            right: 16.0,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()), // Navigate to OtherPage
+                );
+              },
+              child: Text('Go to Other Page'),
+            ),
           ),
         ],
       ),
