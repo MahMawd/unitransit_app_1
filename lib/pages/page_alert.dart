@@ -19,7 +19,7 @@ class AddAlert extends StatefulWidget{
 }
 
 class _AddAlertState extends State<AddAlert> {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String busName='';
   void initstate(){
     fetchBusName(widget.voyage?.busId);

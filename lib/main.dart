@@ -2,6 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:unitransit_app_1/pages/main_page.dart';
+import 'package:unitransit_app_1/pages/notification_etudiant.dart';
+import 'package:unitransit_app_1/pages/page_accueil_etudiant.dart';
 import 'package:unitransit_app_1/pages/page_alert.dart';
 import 'package:unitransit_app_1/pages/page_authentification.dart';
 import 'package:unitransit_app_1/pages/page_maps.dart';
@@ -31,7 +34,7 @@ class UniTransitApp extends StatelessWidget{
   Widget build(BuildContext context){
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Authentification(),
+      home: MainPageEtudiant(),
     );
   }
 }

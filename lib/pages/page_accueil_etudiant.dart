@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -303,9 +304,16 @@ class _HomePageState extends State<HomePage> {
                                       child: ListTile(
                                         leading: const Icon(Icons.timer),
                                         title: Text(
-                                            'Départ: ${currentVoyage.departureTime}'),
+                                            'Departure: ${currentVoyage.departureTime}'),
                                         subtitle: Text(
-                                            'De: ${currentVoyage.fromStation} - À: ${currentVoyage.toStation} \nArrivée: ${currentVoyage.arrivalTime}'),
+                                            'From: ${currentVoyage.fromStation} - To: ${currentVoyage.toStation} \nArrival: ${currentVoyage.arrivalTime}'),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.add),
+                                          onPressed: () {
+                                            addTripToNotifications(
+                                                currentVoyage);
+                                          },
+                                        ),
                                       ),
                                     ),
                                   );
@@ -393,24 +401,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> addTripToNotifications(Voyage voyage) async {
-    try {
-      // Get the current user's document from Firestore
-      String userId = 'user_id_here'; // Replace with actual user ID
-      DocumentReference userRef =
-          FirebaseFirestore.instance.collection('etudiant').doc(userId);
+  try {
+    // Get the current user's ID dynamically
+    String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      // Add the voyage to the notifications array
-      await userRef.update({
-        'notifications': FieldValue.arrayUnion([voyage.toMap()])
-      });
+    // Get reference to the user document
+    DocumentReference userRef = FirebaseFirestore.instance.collection('etudiant').doc(userId);
 
-      // Show a success message or perform any other action as needed
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Trip added to notifications')),
-      );
-    } catch (e) {
-      debugPrint('Error adding trip to notifications: $e');
-      // Show an error message or perform error handling as needed
-    }
+    // Add the voyage document ID to the user's "voyages" array
+    await userRef.update({
+      'voyages': FieldValue.arrayUnion([voyage.voyageId])
+    });
+
+    // Show a success message or perform any other action as needed
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Trip added')),
+    );
+  } catch (e) {
+    debugPrint('Error adding trip to notifications: $e');
+    // Show an error message or perform error handling as needed
   }
+}
+
 }
