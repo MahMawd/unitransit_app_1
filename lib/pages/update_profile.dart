@@ -6,7 +6,6 @@ import 'package:unitransit_app_1/global/common/toast.dart';
 
 class UpdateProfile extends StatelessWidget{
    UpdateProfile ({super.key});
-   //final FirebaseAuth _auth=FirebaseAuth.instance;
    final TextEditingController usernameController = TextEditingController();
    final TextEditingController emailController = TextEditingController();
    final TextEditingController passwordController = TextEditingController();
@@ -47,7 +46,7 @@ class UpdateProfile extends StatelessWidget{
                       width: 120,
                       height: 120,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),//child: const Image(image: AssetImage(assetName))
+                        borderRadius: BorderRadius.circular(100),
                       ),
                     ),
                     Positioned(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 class ZoneTexte extends StatelessWidget{
-  // ignore: prefer_typing_uninitialized_variables
   final controller;
   final String hintText;
   final bool obscureText;

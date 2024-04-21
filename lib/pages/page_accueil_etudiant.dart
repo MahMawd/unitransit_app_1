@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                 ),
-                                child:loading ? CircularProgressIndicator() : Text("Rechercher"),
+                                child:loading ? const CircularProgressIndicator() : const Text("Rechercher"),
                               ),
                             ),
                           ],

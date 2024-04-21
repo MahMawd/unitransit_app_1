@@ -73,7 +73,6 @@ Future<void> _resetPassword() async {
     }
   }
 void _handleEtudiantSignIn() {
-  // Navigate to MainPage for 'etudiant' users
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(builder: (context) => const MainPageEtudiant()),
@@ -81,8 +80,6 @@ void _handleEtudiantSignIn() {
 }
 
 void _handleChauffeurSignIn() {
-  // Do something specific for 'chauffeur' users
-  // For example, navigate to a chauffeur-specific page
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => const HomePageChauffeur()),
@@ -108,8 +105,6 @@ Future<String> _getUserType(String uid) async {
           child: Center(
             child:SingleChildScrollView(
             child: Column(
-              /*mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,*/
               children: [
                 Container(
                   height: 200,
@@ -151,11 +146,6 @@ Future<String> _getUserType(String uid) async {
                 text: "Connexion",
               ),
               const SizedBox(height: 30.0),
-              // Boutton(
-              //   onTap:()=>_resetPassword(),
-              //   text: "reset password",
-              // ),
-              //const SizedBox(height: 30.0),
               Boutton(
                 text: "Créer un compte",
                 onTap:(){

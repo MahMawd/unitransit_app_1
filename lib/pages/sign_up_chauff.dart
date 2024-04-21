@@ -50,20 +50,14 @@ class _SignUpChauffState extends State<SignUpChauff> {
         email: emailController.text,
         password: passwordController.text,
       );
-      // Get the user's ID
     final String userId = userCredential.user!.uid;
-
-    // Create a new document in Firestore for the user
     await FirebaseFirestore.instance.collection('chauffeur').doc(userId).set({
       'ID':idController.text,
       'email': emailController.text,
       'name':nameController.text,
       'password':passwordController.text,
       'username':usernameController.text,
-      // Add other user information as needed
     });
-
-    // Sign up success, navigate to next page or do something else
     debugPrint('Signed up user: $userId');
     showToast(message: 'Compte créé');
   }on FirebaseAuthException catch(e){
@@ -177,7 +171,7 @@ class _SignUpChauffState extends State<SignUpChauff> {
                       onTap:(){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const Authentification())); // Navigate to SignUp page
+                          MaterialPageRoute(builder: (context) => const Authentification()));
                           },
                       child: const Text(
                         "Connectez-vous",

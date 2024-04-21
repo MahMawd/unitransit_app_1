@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Boutton extends StatelessWidget{ // Good
+class Boutton extends StatelessWidget{
 final VoidCallback onTap;
   final String text;
   const Boutton({

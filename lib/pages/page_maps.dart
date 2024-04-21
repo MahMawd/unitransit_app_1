@@ -51,9 +51,6 @@ class _MyMapsState extends State<MyMaps> {
       setState(() {
         currentPositionOfUser = position;
         LatLng positionOfUserInLatLng = LatLng(currentPositionOfUser.latitude, currentPositionOfUser.longitude);
-        //CameraPosition cameraPosition = CameraPosition(target: positionOfUserInLatLng, zoom: 15);
-        //controllerGoogleMap!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-        // Update marker position
         markers = {
           ...markers,
           Marker(

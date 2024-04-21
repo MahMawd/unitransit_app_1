@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:unitransit_app_1/components/bus_widget.dart';
 import 'package:unitransit_app_1/components/voyages_widget.dart';
 import 'package:unitransit_app_1/models/voyage.dart';
-import 'package:unitransit_app_1/pages/page_voyages.dart';
 
 import '../models/bus.dart';
 
@@ -26,97 +24,20 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
 
   Voyage? voy;
   late List<String> plannedVoyagesDocs;
-  //late String driverStateV;
   late Future<String> driverState;
   @override
   void initState() {
     super.initState();
     fetchDriverId();
     fetchPlannedVoyagesFromChauffeur();
-    //driverState = checkIsDriverDrivingBus();
-    //handleDriverState();
-    //fetchAvailableBuses();
   }
   
   Future<void> fetchDriverId() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       driverId = user.uid;
-      //await fetchPlannedTrips();
     }
   }
-  // Future<void> fetchDriversBusId() async {
-  //   try {
-  //     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-  //     .collection('chauffeur').doc(driverId).get();
-
-  //     if(documentSnapshot.exists){
-
-  //         currentBusId=documentSnapshot['busId'];
-
-  //     }
-  //   }catch(e){
-  //     print('error occured fetching drivers current bus id $e');
-  //   }
-  // }
-
-  // Future<void> handleDriverState() async {
-  //   String driverStateV = await driverState;
-  //   if(driverStateV=='driving'){
-  //     await fetchDriversBusId();
-  //     fetchPlannedTrips(currentBusId);
-  //   }
-  // }
-
-  // Future<void> fetchAvailableBuses() async {
-  //   try {
-  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //         .collection('bus')
-  //         .where('disponible', isEqualTo: true)
-  //         .where('driverId', isEqualTo: '')
-  //         .get();
-  //         if(querySnapshot.docs.isNotEmpty){
-  //           setState(() {
-  //             availableSectors = querySnapshot.docs.map((doc){
-  //               return Bus(
-  //               busId: doc.id,
-  //               disponible: doc['disponible'],
-  //               driverId: doc['driverId'],
-  //               nom: doc['nom'],
-  //               );
-  //             }).toList();
-  //           });
-  //           print('Sectors:');
-  //           print(availableSectors);
-  //         }else{
-  //           debugPrint('no buses available');
-  //         }
-  //   }catch(e){
-  //     debugPrint('Error fetching available buses: $e');
-  //   }
-  // }
-  // Future<String> checkIsDriverDrivingBus() async {
-  //   try {
-  //     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-  //     .collection('chauffeur')
-  //     .doc(driverId)
-  //     .get();
-  //     if(documentSnapshot.exists && documentSnapshot['busId']==''){
-  //       print('driver not driving');
-  //       return 'not_driving';
-  //     }else if(documentSnapshot.exists && documentSnapshot['busId']!=''){
-  //       print('driver driving');
-  //       return 'driving';
-  //     }
-  //     else {
-  //       print('unknown error in checkIsDriverDrivingBus');
-  //       return 'unkown error';
-  //     }
-  //   }catch(e){
-  //     print('Error checking is driver driving bus: $e');
-  //     return 'error occured';
-  //   }
-  // }
   Future<LatLngPair> fetchStationCoords(String stationFrom, String stationTo) async {
     try {
       QuerySnapshot fromSnapshot = await FirebaseFirestore.instance
@@ -128,8 +49,8 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
           .where('nom', isEqualTo: stationTo)
           .get();
 
-      LatLng fromLatLng = LatLng(0.0, 0.0);
-      LatLng toLatLng = LatLng(0.0, 0.0);
+      LatLng fromLatLng = const LatLng(0.0, 0.0);
+      LatLng toLatLng = const LatLng(0.0, 0.0);
 
       if (fromSnapshot.docs.isNotEmpty && toSnapshot.docs.isNotEmpty) {
         DocumentSnapshot fromDoc = fromSnapshot.docs.first;
@@ -142,7 +63,7 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
       return LatLngPair(fromLatLng, toLatLng);
     } catch (e) {
         debugPrint('Error fetching station coordinates: $e');
-        return LatLngPair(LatLng(0.0, 0.0), LatLng(0.0, 0.0));
+        return LatLngPair(const LatLng(0.0, 0.0), const LatLng(0.0, 0.0));
       }
     }
 
@@ -202,7 +123,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
   }
   
   Future<Voyage?> fetchVoyage(String docId,) async {
-    //print('ahla');
   try {
     DocumentSnapshot documentSnapshot = await _firestore.collection('voyage').doc(docId).get();
     if (documentSnapshot.exists) {
@@ -263,8 +183,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                       itemBuilder:(context, index){
                         String voyageId = plannedVoyagesDocs[index];
                         print(voyageId);
-                        //LatLng fromS=new LatLng(0.0, 0.0);LatLng toS=new LatLng(0.0, 0.0);
-
                         return 
                         FutureBuilder(
                           future: fetchVoyage(voyageId), 
@@ -280,7 +198,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                             }
                           },);
                       },
-                      
                       ),
                   )
                     : const SizedBox(height:500, child: Center(child: Text("Pas de voyages prévus, veuillez contacter l'administration.")))
@@ -288,10 +205,6 @@ class _MainPageChauffeurState extends State<MainPageChauffeur> {
                 ],
               ),
             ),
-              
-
-
-  
     );
   }
 }

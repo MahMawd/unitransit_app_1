@@ -15,7 +15,7 @@ class NotificationView extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body:NotificationList(),
+      body:const NotificationList(),
     );
   }
 }
@@ -66,7 +66,7 @@ class NotificationList extends StatelessWidget {
                 );
 
                 }else {
-                  return Center(child: Text('Aucune notification, abonnez-vous à un voyage'));
+                  return const Center(child: Text('Aucune notification, abonnez-vous à un voyage'));
                 }
               }
             },

@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
 import 'package:unitransit_app_1/global/common/toast.dart';
-//import 'package:unitransit/add.alert.dart';
 import 'package:unitransit_app_1/models/voyage.dart';
-import 'package:unitransit_app_1/pages/main_page_chauff.dart';
 import 'package:unitransit_app_1/pages/page_alert.dart';
 
 class VoyagesWidget extends StatefulWidget {
@@ -52,7 +48,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
   Future<void> updateVoyagesListForDriver(String voyageId) async {
     try {
       DocumentSnapshot documentSnapshot = await _firestore.collection('chauffeur').doc(driverId).get();
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
       if(documentSnapshot.exists){
         List<dynamic> voyagesList = documentSnapshot['voyages'];
         voyagesList.remove(voyageId);
@@ -64,12 +60,6 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
     }
   }
   
-  // void updateUI(){
-  //  setState(() {
-  //     //You can also make changes to your state here.
-  //   });
-  // }
-
   Future<void> handleStart(String voyId) async {
     try {
       DocumentSnapshot documentSnapshot= await _firestore.collection('chauffeur').
@@ -85,7 +75,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
       showToast(message: e.code);
     }
     catch(e){
-
+      print("error in handlStart $e");
     }
   }
   Future<void> handleArrival(String voyId) async {
@@ -139,9 +129,6 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 onPressed: (){
                   fetchDriverId();
                   handleStart(widget.voyage!.voyageId);
-                    //updateBusIdForDriver(widget.voyage!.busId);
-                    //updateDriverIdforBus(driverId,widget.voyage!.busId);
-                    //Navigator.push(context,MaterialPageRoute(builder: (context) => const HomePageChauffeur()),);
                     
                 },),
               const SizedBox(width:25.0),
@@ -153,8 +140,6 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 child:const Text('Arrivé'),
                 onPressed: (){
                   handleArrival(widget.voyage!.voyageId);
-                  // updateBusIdForDriver('');
-                  //   updateDriverIdforBus('',widget.voyage!.busId);
                 },),
               const SizedBox(width:40.0),
                 ElevatedButton(
@@ -165,8 +150,7 @@ class _VoyagesWidgetState extends State<VoyagesWidget> {
                 child:const Text('Alerte'),
                 onPressed: (){
                   Navigator.push(context,MaterialPageRoute(builder: (context) => AddAlert(voyage:widget.voyage)),);
-                }//()=> Get.to(() =>  const AddAlert()),
-                
+                }
                 )
                 ],
               ), 

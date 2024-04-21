@@ -26,7 +26,6 @@ class Voyage {
       'arrivalTime': arrivalTime,
       'fromStation': fromStation,
       'toStation': toStation,
-      // Convert LatLng to Map
       'fromStationLatLng': {
         'latitude': fromStationLatLng.latitude,
         'longitude': fromStationLatLng.longitude,
